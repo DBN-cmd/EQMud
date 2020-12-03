@@ -16,17 +16,18 @@ namespace EQMud
             int currentXPosition = 10;
             int currentYPosition = 10;
 
+
             Console.WriteLine("******EQ MUD TITLE SCREEN******");
 
             // Code area for start new or continue
 
             // Coding for movement
-            
-            while(!isCampingOut)
+
+            while (!isCampingOut)
             {
                 CharLocation(xCoord, yCoord, ref currentXPosition, ref currentYPosition);
                 xCoord = currentXPosition;
-                yCoord = currentYPosition;                
+                yCoord = currentYPosition;
                 Console.WriteLine($"Current xCoord is: {xCoord}");
                 Console.WriteLine($"Current yCoord is: {yCoord}");
                 string playerChoice = Console.ReadLine();
@@ -63,8 +64,14 @@ namespace EQMud
             }
 
         }
-        static void CharLocation(int xLoc, int yLoc, ref int currentXPosition, ref int currentYPosition)
+
+
+
+        static void CharLocation(int xLoc, int yLoc, ref int currentXPosition, ref int currentYPosition) // Character locations with descriptions
         {
+            int mobType = 0;
+            int mobNumber = 0;
+            int mobChance = 0;
 
             if (xLoc == 10 && yLoc == 10) // Felwith Gates
             {
@@ -112,7 +119,7 @@ namespace EQMud
                 Console.WriteLine("FELWITH GATES");
                 currentXPosition = 10;
                 currentYPosition = 10;
-                
+
             }
             else if (xLoc == 9 && yLoc == 9) // lesser faydark south, road closed
             {
@@ -146,12 +153,11 @@ namespace EQMud
                 currentXPosition = 10;
                 currentYPosition = 11;
             }
-            else if (xLoc == 9 && yLoc == 11) // Bandit Camp
-            {
-                Console.WriteLine("BANDIT CAMP");
-                currentXPosition = 9;
-                currentYPosition = 11;
-            }
+
+
+            ///// replace bandit camp here
+
+
             else if (xLoc == 8 && yLoc == 11) // GFay Forest
             {
                 Console.WriteLine("GREATER FAYDARK FOREST");
@@ -170,7 +176,7 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAIN VALLEY");
                 currentXPosition = 7;
                 currentYPosition = 11;
-                
+
             }
             else if (xLoc == 11 && yLoc == 11) // Gfay forest too dense to pass
             {
@@ -178,7 +184,7 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK HILLS NORTH OF FELWITH");
                 currentXPosition = 10;
                 currentYPosition = 11;
-                
+
             }
 
 
@@ -605,10 +611,66 @@ namespace EQMud
                 currentXPosition = 9;
                 currentYPosition = 20;
             }
-
-
-
+            else if (xLoc == 9 && yLoc == 11) // Bandit Camp
+            {
+                Console.WriteLine("BANDIT CAMP");
+                currentXPosition = 9;
+                currentYPosition = 11;
+                mobType = 1;
+                mobNumber = 3;
+                mobChance = 75;
+                CreatureGen(mobType, mobNumber, mobChance);
+            }
 
         }
+
+
+
+
+        static void CreatureGen(int whichMobSpawn, int mobTotalNumber, int mobPercentChance)
+        {
+            Random rnd = new Random();
+
+            while(mobTotalNumber > 0)
+            {
+                int baseChance = rnd.Next(1, 100);
+                Console.WriteLine(baseChance);
+
+                if (baseChance < mobPercentChance)
+                {
+                    Console.WriteLine($"Spawning {whichMobSpawn}");
+                    mobPercentChance /= 2;
+                    mobTotalNumber -= 1;
+                }
+                else
+                {
+                    break;
+                }
+
+
+            }
+            
+            //{
+
+            //    if (mobTotalNumber > 1)
+            //    {
+            //        mobTotalNumber -= 1;
+            //        mobPercentChance /= 2;
+            //        baseChance = rnd.Next(1, 100);
+
+            //        if (baseChance < mobPercentChance)
+            //        {
+
+            //        }
+                    
+            //    }
+
+            //}
+
+        }
+
+
+
+        
     }
 }
