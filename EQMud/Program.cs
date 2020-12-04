@@ -15,7 +15,7 @@ namespace EQMud
             int yCoord = 10;
             int currentXPosition = 10;
             int currentYPosition = 10;
-
+            
 
             Console.WriteLine("******EQ MUD TITLE SCREEN******");
 
@@ -25,6 +25,7 @@ namespace EQMud
 
             while (!isCampingOut)
             {
+                Console.WriteLine("\n\n");
                 CharLocation(xCoord, yCoord, ref currentXPosition, ref currentYPosition);
                 xCoord = currentXPosition;
                 yCoord = currentYPosition;
@@ -54,6 +55,10 @@ namespace EQMud
                         xCoord -= 1;
                         break;
 
+                    case "ATK":
+                    case "ATTACK":
+
+
                     case "CAMP":
                         isCampingOut = true;
                         break;
@@ -69,9 +74,12 @@ namespace EQMud
 
         static void CharLocation(int xLoc, int yLoc, ref int currentXPosition, ref int currentYPosition) // Character locations with descriptions
         {
-            int mobType = 0;
+            int mobType1 = 0;
+            int mobType2 = 0;
+            int mobType3 = 0;
             int mobNumber = 0;
             int mobChance = 0;
+            int numMobDiffTypes = 0;
 
             if (xLoc == 10 && yLoc == 10) // Felwith Gates
             {
@@ -146,14 +154,8 @@ namespace EQMud
 
             }
 
-
-            else if (xLoc == 10 && yLoc == 11) // GFay Hills and Trees NFelwith
-            {
-                Console.WriteLine("GREATER FAYDARK HILLS NORTH OF FELWITH");
-                currentXPosition = 10;
-                currentYPosition = 11;
-            }
-
+            //// replace gfay hills and trees Nfelwith here
+            
 
             ///// replace bandit camp here
 
@@ -187,13 +189,8 @@ namespace EQMud
 
             }
 
-
-            else if (xLoc == 10 && yLoc == 12) // GFay Forest Deep
-            {
-                Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
-                currentXPosition = 10;
-                currentYPosition = 12;
-            }
+            //// replace GFay forest deep 10,12
+            
             else if (xLoc == 9 && yLoc == 12) // GFay Forest
             {
                 Console.WriteLine("GREATER FAYDARK FOREST");
@@ -611,36 +608,96 @@ namespace EQMud
                 currentXPosition = 9;
                 currentYPosition = 20;
             }
+
+            else if (xLoc == 10 && yLoc == 12) // GFay Forest Deep
+            {
+                Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
+                currentXPosition = 10;
+                currentYPosition = 12;
+                mobType1 = 4; // bat mob
+                mobType2 = 0; // bee mob
+                mobType3 = 0; // not possible for 3rd type in this area
+                mobNumber = 4; // total number that can spawn in area
+                numMobDiffTypes = 1; // how many different types of mobs in area
+                mobChance = 75;
+                CreatureGen(mobType1, mobType2, mobType3, mobNumber, numMobDiffTypes, mobChance);
+            }
+
+            else if (xLoc == 10 && yLoc == 11) // GFay Hills and Trees NFelwith
+            {
+                Console.WriteLine("GREATER FAYDARK HILLS NORTH OF FELWITH");
+                currentXPosition = 10;
+                currentYPosition = 11;
+                mobType1 = 2; // bat mob
+                mobType2 = 3; // bee mob
+                mobType3 = 0; // not possible for 3rd type in this area
+                mobNumber = 2; // total number that can spawn in area
+                numMobDiffTypes = 3; // how many different types of mobs in area
+                mobChance = 75;
+                CreatureGen(mobType1, mobType2, mobType3, mobNumber, numMobDiffTypes, mobChance);
+            }
+
             else if (xLoc == 9 && yLoc == 11) // Bandit Camp
             {
                 Console.WriteLine("BANDIT CAMP");
                 currentXPosition = 9;
                 currentYPosition = 11;
-                mobType = 1;
-                mobNumber = 3;
+                mobType1 = 1; // bandit mob
+                mobType2 = 0; // no second mob type
+                mobType3 = 0; // no third mob type
+                mobNumber = 3; // total number that can spawn in area
+                numMobDiffTypes = 1; // how many different types of mobs in area
                 mobChance = 75;
-                CreatureGen(mobType, mobNumber, mobChance);
+                CreatureGen(mobType1, mobType2, mobType3, mobNumber, numMobDiffTypes, mobChance);
             }
 
         }
 
-
-
-
-        static void CreatureGen(int whichMobSpawn, int mobTotalNumber, int mobPercentChance)
+               
+        static void CreatureGen(int numType1, int numType2, int numType3, int mobTotalNumber, int totalNumMobDiffTypes, int mobPercentChance)
         {
             Random rnd = new Random();
+            
 
             while(mobTotalNumber > 0)
             {
-                int baseChance = rnd.Next(1, 100);
+                int baseChance = rnd.Next(1, 101);
                 Console.WriteLine(baseChance);
 
                 if (baseChance < mobPercentChance)
                 {
-                    Console.WriteLine($"Spawning {whichMobSpawn}");
-                    mobPercentChance /= 2;
-                    mobTotalNumber -= 1;
+                    int rndMobType = rnd.Next(1, totalNumMobDiffTypes);
+                    Console.WriteLine($"which of the 3 mobs in area are going to spawn{rndMobType}");
+
+                    switch (rndMobType)
+                    {
+                        case 1:
+                            
+                            MobTypes(numType1);
+                            mobPercentChance /= 2;
+                            mobTotalNumber -= 1;
+
+                            break;
+
+                        case 2:
+                           
+                            MobTypes(numType2);
+                            mobPercentChance /= 2;
+                            mobTotalNumber -= 1;
+
+                            break;
+
+                        case 3:
+                            
+                            MobTypes(numType3);
+                            mobPercentChance /= 2;
+                            mobTotalNumber -= 1;
+
+                            break;
+
+                    }
+
+                    
                 }
                 else
                 {
@@ -650,23 +707,43 @@ namespace EQMud
 
             }
             
-            //{
+            
 
-            //    if (mobTotalNumber > 1)
-            //    {
-            //        mobTotalNumber -= 1;
-            //        mobPercentChance /= 2;
-            //        baseChance = rnd.Next(1, 100);
-
-            //        if (baseChance < mobPercentChance)
-            //        {
-
-            //        }
-                    
-            //    }
-
-            //}
-
+        }
+        static int MobTypes(int actMobName)
+        {
+            if (actMobName == 1)
+            {
+                Console.WriteLine("a Bandit appears!");
+                int trueMobName = 1;
+                // ref out hp/ac/dmg rang of mob
+                return trueMobName;
+            }
+            else if (actMobName == 2)
+            {
+                Console.WriteLine("a Bat appears!");
+                int trueMobName = 2;
+                // ref out hp/ac/dmg rang of mob
+                return trueMobName;
+            }
+            else if (actMobName == 3)
+            {
+                Console.WriteLine("a Bee appears!");
+                int trueMobName = 3;
+                // ref out hp/ac/dmg rang of mob
+                return trueMobName;
+            }
+            else if (actMobName == 4)
+            {
+                Console.WriteLine("a Fariy appears!");
+                int trueMobName = 4;
+                // ref out hp/ac/dmg rang of mob
+                return trueMobName;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
 
