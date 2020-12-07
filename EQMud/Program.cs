@@ -15,12 +15,13 @@ namespace EQMud
             int yCoord = 10;
             int currentXPosition = 10;
             int currentYPosition = 10;
-            int mobType1 = 0;
-            int mobType2 = 0;
-            int mobType3 = 0;
+            string mobType1 = "";
+            string mobType2 = "";
+            string mobType3 = "";
             int mobNum = 0;
             int numMobDiffTypes = 0;
             int mobChance = 0;
+            var genCreture = new List<string>();
             
 
 
@@ -33,8 +34,8 @@ namespace EQMud
             while (!isCampingOut)
             {
                 Console.WriteLine("\n\n");
-                bool areMobs = false;
-                CharLocation(xCoord, yCoord, ref currentXPosition, ref currentYPosition, ref mobType1, ref mobType2, ref mobType3, ref mobNum, ref numMobDiffTypes, ref mobChance, ref areMobs);
+                bool possibleAreMobs = false;
+                CharLocation(xCoord, yCoord, ref currentXPosition, ref currentYPosition, ref mobType1, ref mobType2, ref mobType3, ref mobNum, ref numMobDiffTypes, ref mobChance, ref possibleAreMobs);
                 xCoord = currentXPosition;
                 yCoord = currentYPosition;
                 Console.WriteLine($"Current xCoord is: {xCoord}");
@@ -42,9 +43,17 @@ namespace EQMud
                 Console.WriteLine(mobType1);
                 Console.WriteLine(mobType2);
                 Console.WriteLine(mobType3);
-                if (areMobs)
+                
+
+
+                if (possibleAreMobs)
                 {
-                    CreatureGen(mobType1, mobType2, mobType3, mobNum, numMobDiffTypes, mobChance); // need to assign another var to skip this if it already gen creatures
+                    CreatureGen(mobType1, mobType2, mobType3, mobNum, numMobDiffTypes, mobChance, genCreture); // need to assign another var to skip this if it already gen creatures
+                    foreach (var mob in genCreture)
+                    {
+                        Console.WriteLine(mob);
+                        //MobTypes(genCreture, mobType1);
+                    }
                     string playerChoice = Console.ReadLine();
                     playerChoice = playerChoice.ToUpper();
                     switch (playerChoice)
@@ -52,21 +61,25 @@ namespace EQMud
                         case "N":
                         case "NORTH":
                             yCoord += 1;
+                            genCreture.Clear();
                             break;
 
                         case "S":
                         case "SOUTH":
                             yCoord -= 1;
+                            genCreture.Clear();
                             break;
 
                         case "E":
                         case "EAST":
                             xCoord += 1;
+                            genCreture.Clear();
                             break;
 
                         case "W":
                         case "WEST":
                             xCoord -= 1;
+                            genCreture.Clear();
                             break;
 
                         case "ATK":
@@ -126,7 +139,7 @@ namespace EQMud
 
 
 
-        static void CharLocation(int xLoc, int yLoc, ref int currentXPosition, ref int currentYPosition, ref int currentMobType1, ref int currentMobType2, ref int currentMobType3, ref int currentMobNum, ref int currentNumMobDiffTypes, ref int currentMobChance, ref bool currentAreMobs) // Character locations with descriptions
+        static void CharLocation(int xLoc, int yLoc, ref int currentXPosition, ref int currentYPosition, ref string mobType1, ref string mobType2, ref string mobType3, ref int currentMobNum, ref int currentNumMobDiffTypes, ref int currentMobChance, ref bool possibleAreMobs) // Character locations with descriptions
         {
             
 
@@ -666,13 +679,13 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
                 currentXPosition = 10;
                 currentYPosition = 12;
-                currentMobType1 = 4; // bat mob
-                currentMobType2 = 0; // bee mob
-                currentMobType3 = 0; // not possible for 3rd type in this area
+                mobType1 = "fairy"; // fairy mob
+                mobType2 = ""; // bee mob
+                mobType3 = ""; // not possible for 3rd type in this area
                 currentMobNum = 4; // total number that can spawn in area
                 currentNumMobDiffTypes = 1; // how many different types of mobs in area
                 currentMobChance = 75;
-                currentAreMobs = true;
+                possibleAreMobs = true;
             }
 
             else if (xLoc == 10 && yLoc == 11) // GFay Hills and Trees NFelwith
@@ -680,13 +693,13 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK HILLS NORTH OF FELWITH");
                 currentXPosition = 10;
                 currentYPosition = 11;
-                currentMobType1 = 2; // bat mob
-                currentMobType2 = 3; // bee mob
-                currentMobType3 = 0; // not possible for 3rd type in this area
+                mobType1 = "bat"; // bat mob
+                mobType2 = "bee"; // bee mob
+                mobType3 = ""; // not possible for 3rd type in this area
                 currentMobNum = 2; // total number that can spawn in area
                 currentNumMobDiffTypes = 3; // how many different types of mobs in area
                 currentMobChance = 75;
-                currentAreMobs = true;
+                possibleAreMobs = true;
             }
 
             else if (xLoc == 9 && yLoc == 11) // Bandit Camp
@@ -694,26 +707,27 @@ namespace EQMud
                 Console.WriteLine("BANDIT CAMP");
                 currentXPosition = 9;
                 currentYPosition = 11;
-                currentMobType1 = 1; // bandit mob
-                currentMobType2 = 0; // no second mob type
-                currentMobType3 = 0; // no third mob type
+                mobType1 = "bandit"; // bandit mob
+                mobType2 = ""; // no second mob type
+                mobType3 = ""; // no third mob type
                 currentMobNum = 3; // total number that can spawn in area
                 currentNumMobDiffTypes = 1; // how many different types of mobs in area
                 currentMobChance = 75;
-                currentAreMobs = true;
+                possibleAreMobs = true;
             }
 
         }
 
                
-        static void CreatureGen(int numType1, int numType2, int numType3, int mobTotalNumber, int totalNumMobDiffTypes, int mobPercentChance)
+        static void CreatureGen(string mobType1, string mobType2, string mobType3, int mobTotalNumber, int totalNumMobDiffTypes, int mobPercentChance, List<string>genCreature)
         {
             Random rnd = new Random();
             
 
             while(mobTotalNumber > 0)
             {
-                int baseChance = rnd.Next(1, 101);
+                int baseChance = 1;
+                //int baseChance = rnd.Next(1, 101);
                 Console.WriteLine(baseChance);
 
                 if (baseChance < mobPercentChance)
@@ -724,24 +738,21 @@ namespace EQMud
                     switch (rndMobType)
                     {
                         case 1:
-                            
-                            MobTypes(numType1);
+                            genCreature.Add(mobType1);
                             mobPercentChance /= 2;
                             mobTotalNumber -= 1;
 
                             break;
 
                         case 2:
-                           
-                            MobTypes(numType2);
+                            genCreature.Add(mobType2);
                             mobPercentChance /= 2;
                             mobTotalNumber -= 1;
 
                             break;
 
                         case 3:
-                            
-                            MobTypes(numType3);
+                            genCreature.Add(mobType3);
                             mobPercentChance /= 2;
                             mobTotalNumber -= 1;
 
@@ -762,41 +773,140 @@ namespace EQMud
             
 
         }
-        static int MobTypes(int actMobName)
-        {
-            if (actMobName == 1)
-            {
-                Console.WriteLine("a Bandit appears!");
-                int trueMobName = 1;
-                // ref out hp/ac/dmg rang of mob
-                return trueMobName;
-            }
-            else if (actMobName == 2)
-            {
-                Console.WriteLine("a Bat appears!");
-                int trueMobName = 2;
-                // ref out hp/ac/dmg rang of mob
-                return trueMobName;
-            }
-            else if (actMobName == 3)
-            {
-                Console.WriteLine("a Bee appears!");
-                int trueMobName = 3;
-                // ref out hp/ac/dmg rang of mob
-                return trueMobName;
-            }
-            else if (actMobName == 4)
-            {
-                Console.WriteLine("a Fariy appears!");
-                int trueMobName = 4;
-                // ref out hp/ac/dmg rang of mob
-                return trueMobName;
-            }
-            else
-            {
-                return 0;
-            }
-        }
+        //static void MobTypes(List<string>genCreature, int mobType1)
+        //{
+        //    int checkMob = genCreature.Count();
+        //    int mobCount = 0;
+
+        //    while(mobCount < checkMob)
+        //    {
+        //        if (genCreature[mobCount] == "genType1")
+        //        {
+        //            int checkMobType = 1;
+        //            while (checkMobType <= 4)
+        //            {
+        //                if (mobType1 == 1)
+        //                {
+        //                    Console.WriteLine("a Bandit appears!");
+        //                    checkMobType += 1;
+        //                    mobCount += 1;
+        //                }
+        //                else if (mobType1 == 2)
+        //                {
+        //                    Console.WriteLine("a bat appears!");
+        //                    checkMobType += 1;
+        //                    mobCount += 1;
+        //                }
+        //                else if (mobType1 == 3)
+        //                {
+        //                    Console.WriteLine("a bee appears!");
+        //                    checkMobType += 1;
+        //                    mobCount += 1;
+        //                }
+        //            }
+        //        }
+        //        else if (genCreature[mobCount] == "genType2")
+        //        {
+        //            int checkMobType = 1;
+        //            while (checkMobType <= 4)
+        //            {
+        //                if (mobType1 == 1)
+        //                {
+        //                    Console.WriteLine("a Bandit appears!");
+        //                    checkMobType += 1;
+        //                    mobCount += 1;
+        //                }
+        //                else if (mobType1 == 2)
+        //                {
+        //                    Console.WriteLine("a bat appears!");
+        //                    checkMobType += 1;
+        //                    mobCount += 1;
+        //                }
+        //                else if (mobType1 == 3)
+        //                {
+        //                    Console.WriteLine("a bee appears!");
+        //                    checkMobType += 1;
+        //                    mobCount += 1;
+        //                }
+        //            }
+        //        }
+        //        else if (genCreature[mobCount] == "genType3")
+        //        {
+        //            int checkMobType = 1;
+        //            while (checkMobType <= 4)
+        //            {
+        //                if (mobType1 == 1)
+        //                {
+        //                    Console.WriteLine("a Bandit appears!");
+        //                    checkMobType += 1;
+        //                    mobCount += 1;
+        //                }
+        //                else if (mobType1 == 2)
+        //                {
+        //                    Console.WriteLine("a bat appears!");
+        //                    checkMobType += 1;
+        //                    mobCount += 1;
+        //                }
+        //                else if (mobType1 == 3)
+        //                {
+        //                    Console.WriteLine("a bee appears!");
+        //                    checkMobType += 1;
+        //                    mobCount += 1;
+        //                }
+        //                else if (mobType1 == 4)
+        //                {
+        //                    Console.WriteLine("a fairy appears!");
+        //                    checkMobType += 1;
+        //                    mobCount += 1;
+        //                }
+        //            }
+        //        }
+        //        else
+        //        {
+                    
+        //            break;
+        //        }
+        //    }
+
+
+            //if (genCreature[0] == "genType1" && mobType1 == 1)
+            //{
+            //    Console.WriteLine("a Bandit appears!");
+            //}
+
+            //if (actMobName == "genType1") 
+            //{
+            //    Console.WriteLine("a Bandit appears!");
+            //    int trueMobName = 1;
+            //    // ref out hp/ac/dmg rang of mob
+            //    return trueMobName;
+            //}
+            //else if (actMobName == "genType2")
+            //{
+            //    Console.WriteLine("a Bat appears!");
+            //    int trueMobName = 2;
+            //    // ref out hp/ac/dmg rang of mob
+            //    return trueMobName;
+            //}
+            //else if (actMobName == "genType3")
+            //{
+            //    Console.WriteLine("a Bee appears!");
+            //    int trueMobName = 3;
+            //    // ref out hp/ac/dmg rang of mob
+            //    return trueMobName;
+            //}
+            //else if (actMobName == "genType4")
+            //{
+            //    Console.WriteLine("a Fariy appears!");
+            //    int trueMobName = 4;
+            //    // ref out hp/ac/dmg rang of mob
+            //    return trueMobName;
+            //}
+            //else
+            //{
+            //    return 0;
+            //}
+        //}
 
 
 
