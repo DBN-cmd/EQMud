@@ -40,20 +40,77 @@ namespace EQMud
                 yCoord = currentYPosition;
                 Console.WriteLine($"Current xCoord is: {xCoord}");
                 Console.WriteLine($"Current yCoord is: {yCoord}\n");
-                Console.WriteLine(mobType1);
-                Console.WriteLine(mobType2);
-                Console.WriteLine(mobType3);
+                //Console.WriteLine(mobType1);
+                //Console.WriteLine(mobType2);
+                //Console.WriteLine(mobType3);
                 
 
 
                 if (possibleAreMobs)
                 {
                     CreatureGen(mobType1, mobType2, mobType3, mobNum, numMobDiffTypes, mobChance, genCreture); // need to assign another var to skip this if it already gen creatures
+
+                Discribe:
+                    Console.WriteLine("The following is in the area:");
+
+                    MobStats(genCreture);
+                    int mobCount = genCreture.Count();
+                    
+                    if (mobCount > 1)
+                    {
+                        Console.WriteLine($"a {genCreture[0]} appears!");
+                        int mob1HP = Convert.ToInt32(genCreture[1]);
+                        int mob1AC = Convert.ToInt32(genCreture[2]);
+                        int mob1DmgMin = Convert.ToInt32(genCreture[3]);
+                        int mob1DmgMax = Convert.ToInt32(genCreture[4]);
+
+                        if (mobCount > 5)
+                        {
+                            Console.WriteLine($"a {genCreture[5]} appears!");
+                            int mob2HP = Convert.ToInt32(genCreture[6]);
+                            int mob2AC = Convert.ToInt32(genCreture[7]);
+                            int mob2DmgMin = Convert.ToInt32(genCreture[8]);
+                            int mob2DmgMax = Convert.ToInt32(genCreture[9]);
+
+                            if (mobCount > 10)
+                            {
+                                Console.WriteLine($"a {genCreture[10]} appears!");
+                                int mob3HP = Convert.ToInt32(genCreture[11]);
+                                int mob3AC = Convert.ToInt32(genCreture[12]);
+                                int mob3DmgMin = Convert.ToInt32(genCreture[13]);
+                                int mob3DmgMax = Convert.ToInt32(genCreture[14]);
+
+                                if (mobCount > 15)
+                                {
+                                    Console.WriteLine($"a {genCreture[15]} appears!");
+                                    int mob4HP = Convert.ToInt32(genCreture[16]);
+                                    int mob4AC = Convert.ToInt32(genCreture[17]);
+                                    int mob4DmgMin = Convert.ToInt32(genCreture[18]);
+                                    int mob4DmgMax = Convert.ToInt32(genCreture[19]);
+
+                                }
+                            }
+
+                        }
+                    }
+                
+
+
+
+
+
+                    //Console.WriteLine(genCreture[0]);
+                    //Console.WriteLine(genCreture[5]);
+                    //Console.WriteLine(genCreture[10]);
+                    //Console.WriteLine(genCreture[15]);
+
+                    Console.WriteLine("**************");
                     foreach (var mob in genCreture)
                     {
                         Console.WriteLine(mob);
                         //MobTypes(genCreture, mobType1);
                     }
+                    Console.WriteLine("**************");
                     string playerChoice = Console.ReadLine();
                     playerChoice = playerChoice.ToUpper();
                     switch (playerChoice)
@@ -85,6 +142,12 @@ namespace EQMud
                         case "ATK":
                         case "ATTACK":
 
+                        case "DISC":
+                        case "DISCRIBE":
+                            goto Discribe;
+
+                        default:
+                            goto Discribe;
 
                         case "CAMP":
                             isCampingOut = true;
@@ -96,6 +159,9 @@ namespace EQMud
                 }
                 else
                 {
+                    Discribe:
+                        Console.WriteLine("The following is in the area:");
+
                     string playerChoice = Console.ReadLine();
                     playerChoice = playerChoice.ToUpper();
                     switch (playerChoice)
@@ -123,6 +189,13 @@ namespace EQMud
                         case "ATK":
                         case "ATTACK":
 
+                        case "DISC":
+                        case "DISCRIBE":
+                            goto Discribe;
+
+                        default:
+                            goto Discribe;
+
 
                         case "CAMP":
                             isCampingOut = true;
@@ -133,6 +206,121 @@ namespace EQMud
                     }
                 }
                 
+            }
+
+        }
+
+
+        static void CreatureGen(string mobType1, string mobType2, string mobType3, int mobTotalNumber, int totalNumMobDiffTypes, int mobPercentChance, List<string> genCreature)
+        {
+            Random rnd = new Random();
+
+
+            while (mobTotalNumber > 0)
+            {
+                int baseChance = 1;
+                //int baseChance = rnd.Next(1, 101);
+                //Console.WriteLine(baseChance);
+
+                if (baseChance < mobPercentChance)
+                {
+                    int rndMobType = rnd.Next(1, totalNumMobDiffTypes);
+                    //Console.WriteLine($"which of the 3 mobs in area are going to spawn{rndMobType}");
+
+                    switch (rndMobType)
+                    {
+                        case 1:
+                            genCreature.Add(mobType1);
+                            mobPercentChance /= 2;
+                            mobTotalNumber -= 1;
+
+                            break;
+
+                        case 2:
+                            genCreature.Add(mobType2);
+                            mobPercentChance /= 2;
+                            mobTotalNumber -= 1;
+
+                            break;
+
+                        case 3:
+                            genCreature.Add(mobType3);
+                            mobPercentChance /= 2;
+                            mobTotalNumber -= 1;
+
+                            break;
+
+                    }
+
+
+                }
+                else
+                {
+                    break;
+                }
+
+
+            }
+
+
+
+        }
+
+        //static int MobStats(int mob1HP, int mob1AC, int mob1DmgMin, int mob1DmgMax, int mob2HP, int mob2AC, int mob2DmgMin, int mob2DmgMax, int mob3HP, int mob3AC, int mob3DmgMin, int mob3DmgMax, int mob4HP, int mob4AC, int mob4DmgMin, int mob4DmgMax, List<string> genCreature)
+        static void MobStats(List<string> genCreature)
+        {
+            
+            int numMob = genCreature.Count();
+            Console.WriteLine(numMob);
+
+            int indexCount = 0;
+
+            while (indexCount < numMob)
+            {
+                numMob = genCreature.Count();
+                Console.WriteLine(numMob);
+
+                if (genCreature[indexCount] == "bandit")
+                {
+                    indexCount += 1;
+                    genCreature.Insert(indexCount, "5");
+                    genCreature.Insert(indexCount, "2");
+                    genCreature.Insert(indexCount, "8");
+                    genCreature.Insert(indexCount, "10");
+                 
+                }
+                else if (genCreature[indexCount] == "bat")
+                {
+                    indexCount += 1;
+                    genCreature.Insert(indexCount, "3");
+                    genCreature.Insert(indexCount, "1");
+                    genCreature.Insert(indexCount, "4");
+                    genCreature.Insert(indexCount, "6");
+                 
+                }
+                else if (genCreature[indexCount] == "bee")
+                {
+                    indexCount += 1;
+                    genCreature.Insert(indexCount, "4");
+                    genCreature.Insert(indexCount, "1");
+                    genCreature.Insert(indexCount, "5");
+                    genCreature.Insert(indexCount, "4");
+
+                }
+                else if (genCreature[indexCount] == "fairy")
+                {
+                    indexCount += 1;
+                    genCreature.Insert(indexCount, "6");
+                    genCreature.Insert(indexCount, "3");
+                    genCreature.Insert(indexCount, "10");
+                    genCreature.Insert(indexCount, "10");
+
+                }
+                else
+                {
+                    indexCount += 1;
+                }
+
             }
 
         }
@@ -150,6 +338,53 @@ namespace EQMud
                 currentXPosition = 10;
                 currentYPosition = 10;
             }
+
+
+
+            else if (xLoc == 10 && yLoc == 12) // GFay Forest Deep
+            {
+                Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
+                currentXPosition = 10;
+                currentYPosition = 12;
+                mobType1 = "fairy"; // fairy mob
+                mobType2 = ""; // bee mob
+                mobType3 = ""; // not possible for 3rd type in this area
+                currentMobNum = 4; // total number that can spawn in area
+                currentNumMobDiffTypes = 1; // how many different types of mobs in area
+                currentMobChance = 75;
+                possibleAreMobs = true;
+            }
+
+            else if (xLoc == 10 && yLoc == 11) // GFay Hills and Trees NFelwith
+            {
+                Console.WriteLine("GREATER FAYDARK HILLS NORTH OF FELWITH");
+                currentXPosition = 10;
+                currentYPosition = 11;
+                mobType1 = "bat"; // bat mob
+                mobType2 = "bee"; // bee mob
+                mobType3 = ""; // not possible for 3rd type in this area
+                currentMobNum = 2; // total number that can spawn in area
+                currentNumMobDiffTypes = 3; // how many different types of mobs in area
+                currentMobChance = 75;
+                possibleAreMobs = true;
+            }
+
+            else if (xLoc == 9 && yLoc == 11) // Bandit Camp
+            {
+                Console.WriteLine("BANDIT CAMP");
+                currentXPosition = 9;
+                currentYPosition = 11;
+                mobType1 = "bandit"; // bandit mob
+                mobType2 = ""; // no second mob type
+                mobType3 = ""; // no third mob type
+                currentMobNum = 3; // total number that can spawn in area
+                currentNumMobDiffTypes = 1; // how many different types of mobs in area
+                currentMobChance = 75;
+                possibleAreMobs = true;
+            }
+
+
+
             else if (xLoc == 9 && yLoc == 10) // Lesser Faydark enterance
             {
                 Console.WriteLine("LESSER FAYDARK ENTERANCE");
@@ -674,105 +909,12 @@ namespace EQMud
 
 
 
-            else if (xLoc == 10 && yLoc == 12) // GFay Forest Deep
-            {
-                Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
-                currentXPosition = 10;
-                currentYPosition = 12;
-                mobType1 = "fairy"; // fairy mob
-                mobType2 = ""; // bee mob
-                mobType3 = ""; // not possible for 3rd type in this area
-                currentMobNum = 4; // total number that can spawn in area
-                currentNumMobDiffTypes = 1; // how many different types of mobs in area
-                currentMobChance = 75;
-                possibleAreMobs = true;
-            }
-
-            else if (xLoc == 10 && yLoc == 11) // GFay Hills and Trees NFelwith
-            {
-                Console.WriteLine("GREATER FAYDARK HILLS NORTH OF FELWITH");
-                currentXPosition = 10;
-                currentYPosition = 11;
-                mobType1 = "bat"; // bat mob
-                mobType2 = "bee"; // bee mob
-                mobType3 = ""; // not possible for 3rd type in this area
-                currentMobNum = 2; // total number that can spawn in area
-                currentNumMobDiffTypes = 3; // how many different types of mobs in area
-                currentMobChance = 75;
-                possibleAreMobs = true;
-            }
-
-            else if (xLoc == 9 && yLoc == 11) // Bandit Camp
-            {
-                Console.WriteLine("BANDIT CAMP");
-                currentXPosition = 9;
-                currentYPosition = 11;
-                mobType1 = "bandit"; // bandit mob
-                mobType2 = ""; // no second mob type
-                mobType3 = ""; // no third mob type
-                currentMobNum = 3; // total number that can spawn in area
-                currentNumMobDiffTypes = 1; // how many different types of mobs in area
-                currentMobChance = 75;
-                possibleAreMobs = true;
-            }
+            
 
         }
 
                
-        static void CreatureGen(string mobType1, string mobType2, string mobType3, int mobTotalNumber, int totalNumMobDiffTypes, int mobPercentChance, List<string>genCreature)
-        {
-            Random rnd = new Random();
-            
-
-            while(mobTotalNumber > 0)
-            {
-                int baseChance = 1;
-                //int baseChance = rnd.Next(1, 101);
-                Console.WriteLine(baseChance);
-
-                if (baseChance < mobPercentChance)
-                {
-                    int rndMobType = rnd.Next(1, totalNumMobDiffTypes);
-                    Console.WriteLine($"which of the 3 mobs in area are going to spawn{rndMobType}");
-
-                    switch (rndMobType)
-                    {
-                        case 1:
-                            genCreature.Add(mobType1);
-                            mobPercentChance /= 2;
-                            mobTotalNumber -= 1;
-
-                            break;
-
-                        case 2:
-                            genCreature.Add(mobType2);
-                            mobPercentChance /= 2;
-                            mobTotalNumber -= 1;
-
-                            break;
-
-                        case 3:
-                            genCreature.Add(mobType3);
-                            mobPercentChance /= 2;
-                            mobTotalNumber -= 1;
-
-                            break;
-
-                    }
-
-                    
-                }
-                else
-                {
-                    break;
-                }
-
-
-            }
-            
-            
-
-        }
+        
         //static void MobTypes(List<string>genCreature, int mobType1)
         //{
         //    int checkMob = genCreature.Count();
