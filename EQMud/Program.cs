@@ -11,6 +11,7 @@ namespace EQMud
         static void Main(string[] args)
         {
             bool isCampingOut = false;
+            //bool prevMobs = false;
             int xCoord = 10;
             int yCoord = 10;
             int currentXPosition = 10;
@@ -21,8 +22,26 @@ namespace EQMud
             int mobNum = 0;
             int numMobDiffTypes = 0;
             int mobChance = 0;
-            var genCreture = new List<string>();
-            
+            var genCreature = new List<string>();
+            var holdGenCreature = new List<string>();
+            int mob1HP = 0;
+            int mob1AC = 0;
+            int mob1DmgMin= 0;
+            int mob1DmgMax = 0;
+            int mob2HP = 0;
+            int mob2AC = 0;
+            int mob2DmgMin = 0;
+            int mob2DmgMax = 0;
+            int mob3HP = 0;
+            int mob3AC = 0;
+            int mob3DmgMin = 0;
+            int mob3DmgMax = 0;
+            int mob4HP = 0;
+            int mob4AC = 0;
+            int mob4DmgMin = 0;
+            int mob4DmgMax = 0;
+
+
 
 
             Console.WriteLine("******EQ MUD TITLE SCREEN******");
@@ -30,6 +49,7 @@ namespace EQMud
             // Code area for start new or continue
 
             // Coding for movement
+            
 
             while (!isCampingOut)
             {
@@ -38,63 +58,119 @@ namespace EQMud
                 CharLocation(xCoord, yCoord, ref currentXPosition, ref currentYPosition, ref mobType1, ref mobType2, ref mobType3, ref mobNum, ref numMobDiffTypes, ref mobChance, ref possibleAreMobs);
                 xCoord = currentXPosition;
                 yCoord = currentYPosition;
+                //CharLocation(xCoord, yCoord, ref currentXPosition, ref currentYPosition, ref mobType1, ref mobType2, ref mobType3, ref mobNum, ref numMobDiffTypes, ref mobChance, ref possibleAreMobs);
+
                 Console.WriteLine($"Current xCoord is: {xCoord}");
                 Console.WriteLine($"Current yCoord is: {yCoord}\n");
                 //Console.WriteLine(mobType1);
                 //Console.WriteLine(mobType2);
                 //Console.WriteLine(mobType3);
-                
 
-
-                if (possibleAreMobs)
+                if (holdGenCreature.Count() > 2)
                 {
-                    CreatureGen(mobType1, mobType2, mobType3, mobNum, numMobDiffTypes, mobChance, genCreture); // need to assign another var to skip this if it already gen creatures
+                DiscribeWithPreMobs:
+                    //holdGenCreature = genCreature;
+                    //holdGenCreature.Clear();
 
-                Discribe:
-                    Console.WriteLine("The following is in the area:");
+                    //Console.WriteLine("******genCreature********");
+                    //foreach (var mob in genCreature)
+                    //{
+                    //    Console.WriteLine(mob);
+                    //    //MobTypes(genCreture, mobType1);
+                    //}
+                    //Console.WriteLine("**************");
 
-                    MobStats(genCreture);
-                    int mobCount = genCreture.Count();
-                    
-                    if (mobCount > 1)
+                    string playerChoice = Console.ReadLine();
+                    playerChoice = playerChoice.ToUpper();
+                    switch (playerChoice)
                     {
-                        Console.WriteLine($"a {genCreture[0]} appears!");
-                        int mob1HP = Convert.ToInt32(genCreture[1]);
-                        int mob1AC = Convert.ToInt32(genCreture[2]);
-                        int mob1DmgMin = Convert.ToInt32(genCreture[3]);
-                        int mob1DmgMax = Convert.ToInt32(genCreture[4]);
+                        case "N":
+                        case "NORTH":
+                            yCoord += 1;
+                            genCreature.Clear();
+                            break;
 
-                        if (mobCount > 5)
-                        {
-                            Console.WriteLine($"a {genCreture[5]} appears!");
-                            int mob2HP = Convert.ToInt32(genCreture[6]);
-                            int mob2AC = Convert.ToInt32(genCreture[7]);
-                            int mob2DmgMin = Convert.ToInt32(genCreture[8]);
-                            int mob2DmgMax = Convert.ToInt32(genCreture[9]);
+                        case "S":
+                        case "SOUTH":
+                            yCoord -= 1;
+                            genCreature.Clear();
+                            break;
 
-                            if (mobCount > 10)
+                        case "E":
+                        case "EAST":
+                            xCoord += 1;
+                            genCreature.Clear();
+                            break;
+
+                        case "W":
+                        case "WEST":
+                            xCoord -= 1;
+                            genCreature.Clear();
+                            break;
+
+                        case "ATK":
+                        case "ATTACK":
+
+                        case "DISC":
+                        case "DISCRIBE":
+                            goto DiscribeWithPreMobs;
+
+                        case "P":
+                            Console.WriteLine("******holdGenCreature********");
+
+                            foreach (string x in holdGenCreature)
                             {
-                                Console.WriteLine($"a {genCreture[10]} appears!");
-                                int mob3HP = Convert.ToInt32(genCreture[11]);
-                                int mob3AC = Convert.ToInt32(genCreture[12]);
-                                int mob3DmgMin = Convert.ToInt32(genCreture[13]);
-                                int mob3DmgMax = Convert.ToInt32(genCreture[14]);
-
-                                if (mobCount > 15)
-                                {
-                                    Console.WriteLine($"a {genCreture[15]} appears!");
-                                    int mob4HP = Convert.ToInt32(genCreture[16]);
-                                    int mob4AC = Convert.ToInt32(genCreture[17]);
-                                    int mob4DmgMin = Convert.ToInt32(genCreture[18]);
-                                    int mob4DmgMax = Convert.ToInt32(genCreture[19]);
-
-                                }
+                                Console.WriteLine(x);
                             }
+                            Console.WriteLine("**************");
+                            Console.WriteLine("MOB 1 STATS");
+                            Console.WriteLine($"1hp = {mob1HP}");
+                            Console.WriteLine($"1AC = {mob1AC}");
+                            Console.WriteLine($"1min = {mob1DmgMin}");
+                            Console.WriteLine($"1max = {mob1DmgMax}");
+                            Console.WriteLine("MOB 2 STATS");
+                            Console.WriteLine($"2hp = {mob2HP}");
+                            Console.WriteLine($"2AC = {mob2AC}");
+                            Console.WriteLine($"2min = {mob2DmgMin}");
+                            Console.WriteLine($"2max = {mob2DmgMax}");
+                            Console.WriteLine("MOB 3 STATS");
+                            Console.WriteLine($"3hp = {mob3HP}");
+                            Console.WriteLine($"3AC = {mob3AC}");
+                            Console.WriteLine($"3min = {mob3DmgMin}");
+                            Console.WriteLine($"3max = {mob3DmgMax}");
+                            Console.WriteLine("MOB 4 STATS");
+                            Console.WriteLine($"4hp = {mob4HP}");
+                            Console.WriteLine($"4AC = {mob4AC}");
+                            Console.WriteLine($"4min = {mob4DmgMin}");
+                            Console.WriteLine($"4max = {mob4DmgMax}");
+                            Console.ReadLine();
+                            goto DiscribeWithPreMobs;
 
-                        }
+
+                        default:
+                            goto DiscribeWithPreMobs;
+
+                        case "CAMP":
+                            isCampingOut = true;
+                            break;
+
+
+
                     }
-                
+                }
 
+
+                else if (possibleAreMobs)
+                {
+                    CreatureGen(mobType1, mobType2, mobType3, mobNum, numMobDiffTypes, mobChance, genCreature); // need to assign another var to skip this if it already gen creatures
+
+                    MobStats(genCreature, holdGenCreature);
+
+                DiscribeWithMobs:
+
+                    MobStatAssign(genCreature, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC, ref mob2DmgMin, ref mob2DmgMax, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, ref mob4DmgMax);
+
+                    //holdGenCreature = genCreature;
 
 
 
@@ -104,13 +180,14 @@ namespace EQMud
                     //Console.WriteLine(genCreture[10]);
                     //Console.WriteLine(genCreture[15]);
 
-                    Console.WriteLine("**************");
-                    foreach (var mob in genCreture)
-                    {
-                        Console.WriteLine(mob);
-                        //MobTypes(genCreture, mobType1);
-                    }
-                    Console.WriteLine("**************");
+                    //Console.WriteLine("******genCreature********");
+                    //foreach (var mob in genCreature)
+                    //{
+                    //    Console.WriteLine(mob);
+                    //    //MobTypes(genCreture, mobType1);
+                    //}
+                    //Console.WriteLine("**************");
+
                     string playerChoice = Console.ReadLine();
                     playerChoice = playerChoice.ToUpper();
                     switch (playerChoice)
@@ -118,25 +195,25 @@ namespace EQMud
                         case "N":
                         case "NORTH":
                             yCoord += 1;
-                            genCreture.Clear();
+                            genCreature.Clear();
                             break;
 
                         case "S":
                         case "SOUTH":
                             yCoord -= 1;
-                            genCreture.Clear();
+                            genCreature.Clear();
                             break;
 
                         case "E":
                         case "EAST":
                             xCoord += 1;
-                            genCreture.Clear();
+                            genCreature.Clear();
                             break;
 
                         case "W":
                         case "WEST":
                             xCoord -= 1;
-                            genCreture.Clear();
+                            genCreature.Clear();
                             break;
 
                         case "ATK":
@@ -144,10 +221,42 @@ namespace EQMud
 
                         case "DISC":
                         case "DISCRIBE":
-                            goto Discribe;
+                            goto DiscribeWithMobs;
+
+                        case "P":
+                            Console.WriteLine("******holdGenCreature********");
+
+                            foreach (string x in holdGenCreature)
+                            {
+                                Console.WriteLine(x);
+                            }
+                            Console.WriteLine("**************");
+                            Console.WriteLine("MOB 1 STATS");
+                            Console.WriteLine($"1hp = {mob1HP}");
+                            Console.WriteLine($"1AC = {mob1AC}");
+                            Console.WriteLine($"1min = {mob1DmgMin}");
+                            Console.WriteLine($"1max = {mob1DmgMax}");
+                            Console.WriteLine("MOB 2 STATS");
+                            Console.WriteLine($"2hp = {mob2HP}");
+                            Console.WriteLine($"2AC = {mob2AC}");
+                            Console.WriteLine($"2min = {mob2DmgMin}");
+                            Console.WriteLine($"2max = {mob2DmgMax}");
+                            Console.WriteLine("MOB 3 STATS");
+                            Console.WriteLine($"3hp = {mob3HP}");
+                            Console.WriteLine($"3AC = {mob3AC}");
+                            Console.WriteLine($"3min = {mob3DmgMin}");
+                            Console.WriteLine($"3max = {mob3DmgMax}");
+                            Console.WriteLine("MOB 4 STATS");
+                            Console.WriteLine($"4hp = {mob4HP}");
+                            Console.WriteLine($"4AC = {mob4AC}");
+                            Console.WriteLine($"4min = {mob4DmgMin}");
+                            Console.WriteLine($"4max = {mob4DmgMax}");
+                            Console.ReadLine();
+                            goto DiscribeWithMobs;
+
 
                         default:
-                            goto Discribe;
+                            goto DiscribeWithMobs;
 
                         case "CAMP":
                             isCampingOut = true;
@@ -159,8 +268,9 @@ namespace EQMud
                 }
                 else
                 {
-                    Discribe:
-                        Console.WriteLine("The following is in the area:");
+                    DiscribeNoMobs:
+                    //holdGenCreature = genCreature;
+                    Console.WriteLine("The following is in the area:");
 
                     string playerChoice = Console.ReadLine();
                     playerChoice = playerChoice.ToUpper();
@@ -191,10 +301,10 @@ namespace EQMud
 
                         case "DISC":
                         case "DISCRIBE":
-                            goto Discribe;
+                            goto DiscribeNoMobs;
 
                         default:
-                            goto Discribe;
+                            goto DiscribeNoMobs;
 
 
                         case "CAMP":
@@ -209,6 +319,55 @@ namespace EQMud
             }
 
         }
+
+        static void MobStatAssign(List<string> genCreature, ref int mob1HP, ref int mob1AC, ref int mob1DmgMin, ref int mob1DmgMax, ref int mob2HP, ref int mob2AC, ref int mob2DmgMin, ref int mob2DmgMax, ref int mob3HP, ref int mob3AC, ref int mob3DmgMin, ref int mob3DmgMax, ref int mob4HP, ref int mob4AC, ref int mob4DmgMin, ref int mob4DmgMax)
+        {
+            int mobCount = genCreature.Count();
+
+        
+            Console.WriteLine("The following is in the area:");
+
+
+            
+            if (mobCount > 1)
+            {
+                Console.WriteLine($"a {genCreature[0]} appears!");
+                mob1HP = Convert.ToInt32(genCreature[1]);
+                mob1AC = Convert.ToInt32(genCreature[2]);
+                mob1DmgMin = Convert.ToInt32(genCreature[3]);
+                mob1DmgMax = Convert.ToInt32(genCreature[4]);
+
+                if (mobCount > 5)
+                {
+                    Console.WriteLine($"a {genCreature[5]} appears!");
+                    mob2HP = Convert.ToInt32(genCreature[6]);
+                    mob2AC = Convert.ToInt32(genCreature[7]);
+                    mob2DmgMin = Convert.ToInt32(genCreature[8]);
+                    mob2DmgMax = Convert.ToInt32(genCreature[9]);
+
+                    if (mobCount > 10)
+                    {
+                        Console.WriteLine($"a {genCreature[10]} appears!");
+                        mob3HP = Convert.ToInt32(genCreature[11]);
+                        mob3AC = Convert.ToInt32(genCreature[12]);
+                        mob3DmgMin = Convert.ToInt32(genCreature[13]);
+                        mob3DmgMax = Convert.ToInt32(genCreature[14]);
+
+                        if (mobCount > 15)
+                        {
+                            Console.WriteLine($"a {genCreature[15]} appears!");
+                            mob4HP = Convert.ToInt32(genCreature[16]);
+                            mob4AC = Convert.ToInt32(genCreature[17]);
+                            mob4DmgMin = Convert.ToInt32(genCreature[18]);
+                            mob4DmgMax = Convert.ToInt32(genCreature[19]);
+
+                        }
+                    }
+
+                }
+            }
+        }
+            
 
 
         static void CreatureGen(string mobType1, string mobType2, string mobType3, int mobTotalNumber, int totalNumMobDiffTypes, int mobPercentChance, List<string> genCreature)
@@ -267,7 +426,7 @@ namespace EQMud
         }
 
         //static int MobStats(int mob1HP, int mob1AC, int mob1DmgMin, int mob1DmgMax, int mob2HP, int mob2AC, int mob2DmgMin, int mob2DmgMax, int mob3HP, int mob3AC, int mob3DmgMin, int mob3DmgMax, int mob4HP, int mob4AC, int mob4DmgMin, int mob4DmgMax, List<string> genCreature)
-        static void MobStats(List<string> genCreature)
+        static void MobStats(List<string> genCreature, List<string>holdGenCreature)
         {
             
             int numMob = genCreature.Count();
@@ -278,7 +437,7 @@ namespace EQMud
             while (indexCount < numMob)
             {
                 numMob = genCreature.Count();
-                Console.WriteLine(numMob);
+                //Console.WriteLine(numMob);
 
                 if (genCreature[indexCount] == "bandit")
                 {
@@ -321,6 +480,8 @@ namespace EQMud
                     indexCount += 1;
                 }
 
+                //List<string> passGenCreature = new List<string>(genCreature);
+                //holdGenCreature = passGenCreature;
             }
 
         }
