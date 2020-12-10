@@ -11,6 +11,7 @@ namespace EQMud
         static void Main(string[] args)
         {
             bool isCampingOut = false;
+            
             //bool prevMobs = false;
             int xCoord = 10;
             int yCoord = 10;
@@ -55,7 +56,12 @@ namespace EQMud
             {
                 Console.WriteLine("\n\n");
                 bool possibleAreMobs = false;
-                CharLocation(xCoord, yCoord, ref currentXPosition, ref currentYPosition, ref mobType1, ref mobType2, ref mobType3, ref mobNum, ref numMobDiffTypes, ref mobChance, ref possibleAreMobs);
+                bool north = true;
+                bool south = true;
+                bool east = true;
+                bool west = true;
+                CharLocation(xCoord, yCoord, ref currentXPosition, ref currentYPosition, ref mobType1, ref mobType2, ref mobType3, ref mobNum, ref numMobDiffTypes, ref mobChance, 
+                                    ref possibleAreMobs, ref north, ref south, ref east, ref west);
                 xCoord = currentXPosition;
                 yCoord = currentYPosition;
                 //CharLocation(xCoord, yCoord, ref currentXPosition, ref currentYPosition, ref mobType1, ref mobType2, ref mobType3, ref mobNum, ref numMobDiffTypes, ref mobChance, ref possibleAreMobs);
@@ -66,261 +72,178 @@ namespace EQMud
                 //Console.WriteLine(mobType2);
                 //Console.WriteLine(mobType3);
 
-                if (holdGenCreature.Count() > 2)
+                //if (holdGenCreature.Count() > 2)
+                //{
+                //    CharMovement(genCreature, holdGenCreature, ref isCampingOut, ref xCoord, ref yCoord, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC, 
+                //                    ref mob2DmgMin, ref mob2DmgMax, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, ref mob4DmgMax);
+               
+                    
+                //    // DiscribeWithPreMobs:
+                //    //holdGenCreature = genCreature;
+                //    //holdGenCreature.Clear();
+
+                //    //Console.WriteLine("******genCreature********");
+                //    //foreach (var mob in genCreature)
+                //    //{
+                //    //    Console.WriteLine(mob);
+                //    //    //MobTypes(genCreture, mobType1);
+                //    //}
+                //    //Console.WriteLine("**************");
+
+                    
+                //}
+
+
+                if (possibleAreMobs)
                 {
-                DiscribeWithPreMobs:
-                    //holdGenCreature = genCreature;
-                    //holdGenCreature.Clear();
-
-                    //Console.WriteLine("******genCreature********");
-                    //foreach (var mob in genCreature)
-                    //{
-                    //    Console.WriteLine(mob);
-                    //    //MobTypes(genCreture, mobType1);
-                    //}
-                    //Console.WriteLine("**************");
-
-                    string playerChoice = Console.ReadLine();
-                    playerChoice = playerChoice.ToUpper();
-                    switch (playerChoice)
-                    {
-                        case "N":
-                        case "NORTH":
-                            yCoord += 1;
-                            genCreature.Clear();
-                            break;
-
-                        case "S":
-                        case "SOUTH":
-                            yCoord -= 1;
-                            genCreature.Clear();
-                            break;
-
-                        case "E":
-                        case "EAST":
-                            xCoord += 1;
-                            genCreature.Clear();
-                            break;
-
-                        case "W":
-                        case "WEST":
-                            xCoord -= 1;
-                            genCreature.Clear();
-                            break;
-
-                        case "ATK":
-                        case "ATTACK":
-
-                        case "DISC":
-                        case "DISCRIBE":
-                            goto DiscribeWithPreMobs;
-
-                        case "P":
-                            Console.WriteLine("******holdGenCreature********");
-
-                            foreach (string x in holdGenCreature)
-                            {
-                                Console.WriteLine(x);
-                            }
-                            Console.WriteLine("**************");
-                            Console.WriteLine("MOB 1 STATS");
-                            Console.WriteLine($"1hp = {mob1HP}");
-                            Console.WriteLine($"1AC = {mob1AC}");
-                            Console.WriteLine($"1min = {mob1DmgMin}");
-                            Console.WriteLine($"1max = {mob1DmgMax}");
-                            Console.WriteLine("MOB 2 STATS");
-                            Console.WriteLine($"2hp = {mob2HP}");
-                            Console.WriteLine($"2AC = {mob2AC}");
-                            Console.WriteLine($"2min = {mob2DmgMin}");
-                            Console.WriteLine($"2max = {mob2DmgMax}");
-                            Console.WriteLine("MOB 3 STATS");
-                            Console.WriteLine($"3hp = {mob3HP}");
-                            Console.WriteLine($"3AC = {mob3AC}");
-                            Console.WriteLine($"3min = {mob3DmgMin}");
-                            Console.WriteLine($"3max = {mob3DmgMax}");
-                            Console.WriteLine("MOB 4 STATS");
-                            Console.WriteLine($"4hp = {mob4HP}");
-                            Console.WriteLine($"4AC = {mob4AC}");
-                            Console.WriteLine($"4min = {mob4DmgMin}");
-                            Console.WriteLine($"4max = {mob4DmgMax}");
-                            Console.ReadLine();
-                            goto DiscribeWithPreMobs;
-
-
-                        default:
-                            goto DiscribeWithPreMobs;
-
-                        case "CAMP":
-                            isCampingOut = true;
-                            break;
-
-
-
-                    }
-                }
-
-
-                else if (possibleAreMobs)
-                {
-                    CreatureGen(mobType1, mobType2, mobType3, mobNum, numMobDiffTypes, mobChance, genCreature); // need to assign another var to skip this if it already gen creatures
+                    CreatureGen(mobType1, mobType2, mobType3, mobNum, numMobDiffTypes, mobChance, genCreature, holdGenCreature); // need to assign another var to skip this if it already gen creatures
+                    
 
                     MobStats(genCreature, holdGenCreature);
 
-                DiscribeWithMobs:
+                    MobStatAssign(genCreature, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC, ref mob2DmgMin, ref mob2DmgMax, 
+                                    ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, ref mob4DmgMax);
 
-                    MobStatAssign(genCreature, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC, ref mob2DmgMin, ref mob2DmgMax, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, ref mob4DmgMax);
-
-                    //holdGenCreature = genCreature;
-
-
-
-
-                    //Console.WriteLine(genCreture[0]);
-                    //Console.WriteLine(genCreture[5]);
-                    //Console.WriteLine(genCreture[10]);
-                    //Console.WriteLine(genCreture[15]);
-
-                    //Console.WriteLine("******genCreature********");
-                    //foreach (var mob in genCreature)
-                    //{
-                    //    Console.WriteLine(mob);
-                    //    //MobTypes(genCreture, mobType1);
-                    //}
-                    //Console.WriteLine("**************");
-
-                    string playerChoice = Console.ReadLine();
-                    playerChoice = playerChoice.ToUpper();
-                    switch (playerChoice)
-                    {
-                        case "N":
-                        case "NORTH":
-                            yCoord += 1;
-                            genCreature.Clear();
-                            break;
-
-                        case "S":
-                        case "SOUTH":
-                            yCoord -= 1;
-                            genCreature.Clear();
-                            break;
-
-                        case "E":
-                        case "EAST":
-                            xCoord += 1;
-                            genCreature.Clear();
-                            break;
-
-                        case "W":
-                        case "WEST":
-                            xCoord -= 1;
-                            genCreature.Clear();
-                            break;
-
-                        case "ATK":
-                        case "ATTACK":
-
-                        case "DISC":
-                        case "DISCRIBE":
-                            goto DiscribeWithMobs;
-
-                        case "P":
-                            Console.WriteLine("******holdGenCreature********");
-
-                            foreach (string x in holdGenCreature)
-                            {
-                                Console.WriteLine(x);
-                            }
-                            Console.WriteLine("**************");
-                            Console.WriteLine("MOB 1 STATS");
-                            Console.WriteLine($"1hp = {mob1HP}");
-                            Console.WriteLine($"1AC = {mob1AC}");
-                            Console.WriteLine($"1min = {mob1DmgMin}");
-                            Console.WriteLine($"1max = {mob1DmgMax}");
-                            Console.WriteLine("MOB 2 STATS");
-                            Console.WriteLine($"2hp = {mob2HP}");
-                            Console.WriteLine($"2AC = {mob2AC}");
-                            Console.WriteLine($"2min = {mob2DmgMin}");
-                            Console.WriteLine($"2max = {mob2DmgMax}");
-                            Console.WriteLine("MOB 3 STATS");
-                            Console.WriteLine($"3hp = {mob3HP}");
-                            Console.WriteLine($"3AC = {mob3AC}");
-                            Console.WriteLine($"3min = {mob3DmgMin}");
-                            Console.WriteLine($"3max = {mob3DmgMax}");
-                            Console.WriteLine("MOB 4 STATS");
-                            Console.WriteLine($"4hp = {mob4HP}");
-                            Console.WriteLine($"4AC = {mob4AC}");
-                            Console.WriteLine($"4min = {mob4DmgMin}");
-                            Console.WriteLine($"4max = {mob4DmgMax}");
-                            Console.ReadLine();
-                            goto DiscribeWithMobs;
-
-
-                        default:
-                            goto DiscribeWithMobs;
-
-                        case "CAMP":
-                            isCampingOut = true;
-                            break;
+                    CharMovement(genCreature, holdGenCreature, ref isCampingOut, ref xCoord, ref yCoord, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC,
+                                   ref mob2DmgMin, ref mob2DmgMax, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, ref mob4DmgMax,
+                                   ref north, ref south, ref east, ref west);
 
 
 
-                    }
+
+                    
                 }
                 else
                 {
-                    DiscribeNoMobs:
-                    //holdGenCreature = genCreature;
-                    Console.WriteLine("The following is in the area:");
-
-                    string playerChoice = Console.ReadLine();
-                    playerChoice = playerChoice.ToUpper();
-                    switch (playerChoice)
-                    {
-                        case "N":
-                        case "NORTH":
-                            yCoord += 1;
-                            break;
-
-                        case "S":
-                        case "SOUTH":
-                            yCoord -= 1;
-                            break;
-
-                        case "E":
-                        case "EAST":
-                            xCoord += 1;
-                            break;
-
-                        case "W":
-                        case "WEST":
-                            xCoord -= 1;
-                            break;
-
-                        case "ATK":
-                        case "ATTACK":
-
-                        case "DISC":
-                        case "DISCRIBE":
-                            goto DiscribeNoMobs;
-
-                        default:
-                            goto DiscribeNoMobs;
-
-
-                        case "CAMP":
-                            isCampingOut = true;
-                            break;
-
-
-
-                    }
+                    holdGenCreature.Clear();
+                    CharMovement(genCreature, holdGenCreature, ref isCampingOut, ref xCoord, ref yCoord, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC,
+                                   ref mob2DmgMin, ref mob2DmgMax, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, ref mob4DmgMax,
+                                   ref north, ref south, ref east, ref west);
                 }
                 
             }
 
         }
 
-        static void MobStatAssign(List<string> genCreature, ref int mob1HP, ref int mob1AC, ref int mob1DmgMin, ref int mob1DmgMax, ref int mob2HP, ref int mob2AC, ref int mob2DmgMin, ref int mob2DmgMax, ref int mob3HP, ref int mob3AC, ref int mob3DmgMin, ref int mob3DmgMax, ref int mob4HP, ref int mob4AC, ref int mob4DmgMin, ref int mob4DmgMax)
+        static void CharMovement(List<string>genCreature, List<string> holdGenCreature, ref bool isCampingOut, ref int xCoord, ref int yCoord, ref int mob1HP, ref int mob1AC, 
+                                        ref int mob1DmgMin, ref int mob1DmgMax, ref int mob2HP, ref int mob2AC, ref int mob2DmgMin, ref int mob2DmgMax, ref int mob3HP, ref int mob3AC, 
+                                        ref int mob3DmgMin, ref int mob3DmgMax, ref int mob4HP, ref int mob4AC, ref int mob4DmgMin, ref int mob4DmgMax, ref bool north, ref bool south, 
+                                        ref bool east, ref bool west)
+        {
+            DiscribeArea:
+
+            string playerChoice = Console.ReadLine();
+            playerChoice = playerChoice.ToUpper();
+            switch (playerChoice)
+            {
+                case "N":
+                case "NORTH":
+                    if (!north)
+                    {
+                        Console.WriteLine("You are unable to mobe in that direction!");
+                        break;
+                    }
+                    else
+                    {
+                        yCoord += 1;
+                    }
+                    break;
+
+                case "S":
+                case "SOUTH":
+                    if (!south)
+                    {
+                        Console.WriteLine("You are unable to mobe in that direction!");
+                        break;
+                    }
+                    else
+                    {
+                        yCoord -= 1;
+                    }
+                    break;
+
+                case "E":
+                case "EAST":
+                    if (!east)
+                    {
+                        Console.WriteLine("You are unable to mobe in that direction!");
+                        break;
+                    }
+                    else
+                    {
+                        xCoord += 1;
+                    }
+                    break;
+
+                case "W":
+                case "WEST":
+                    if (!west)
+                    {
+                        Console.WriteLine("You are unable to mobe in that direction!");
+                        break;
+                    }
+                    else
+                    {
+                        xCoord -= 1;
+                    }
+                    break;
+
+                case "ATK":
+                case "ATTACK":
+
+                case "DISC":
+                case "DISCRIBE":
+                    goto DiscribeArea;
+                    
+
+                case "P":
+                    Console.WriteLine("******holdGenCreature********");
+
+                    foreach (string x in holdGenCreature)
+                    {
+                        Console.WriteLine(x);
+                    }
+                    Console.WriteLine("**************");
+                    Console.WriteLine("MOB 1 STATS");
+                    Console.WriteLine($"1hp = {mob1HP}");
+                    Console.WriteLine($"1AC = {mob1AC}");
+                    Console.WriteLine($"1min = {mob1DmgMin}");
+                    Console.WriteLine($"1max = {mob1DmgMax}");
+                    Console.WriteLine("MOB 2 STATS");
+                    Console.WriteLine($"2hp = {mob2HP}");
+                    Console.WriteLine($"2AC = {mob2AC}");
+                    Console.WriteLine($"2min = {mob2DmgMin}");
+                    Console.WriteLine($"2max = {mob2DmgMax}");
+                    Console.WriteLine("MOB 3 STATS");
+                    Console.WriteLine($"3hp = {mob3HP}");
+                    Console.WriteLine($"3AC = {mob3AC}");
+                    Console.WriteLine($"3min = {mob3DmgMin}");
+                    Console.WriteLine($"3max = {mob3DmgMax}");
+                    Console.WriteLine("MOB 4 STATS");
+                    Console.WriteLine($"4hp = {mob4HP}");
+                    Console.WriteLine($"4AC = {mob4AC}");
+                    Console.WriteLine($"4min = {mob4DmgMin}");
+                    Console.WriteLine($"4max = {mob4DmgMax}");
+                    
+                    goto DiscribeArea;
+
+
+                default:
+                    goto DiscribeArea;
+
+                case "CAMP":
+                    isCampingOut = true;
+                    break;
+
+
+
+            }
+
+        }
+
+        static void MobStatAssign(List<string> genCreature, ref int mob1HP, ref int mob1AC, ref int mob1DmgMin, ref int mob1DmgMax, ref int mob2HP, ref int mob2AC, ref int mob2DmgMin, 
+                                    ref int mob2DmgMax, ref int mob3HP, ref int mob3AC, ref int mob3DmgMin, ref int mob3DmgMax, ref int mob4HP, ref int mob4AC, 
+                                    ref int mob4DmgMin, ref int mob4DmgMax)
         {
             int mobCount = genCreature.Count();
 
@@ -370,10 +293,11 @@ namespace EQMud
             
 
 
-        static void CreatureGen(string mobType1, string mobType2, string mobType3, int mobTotalNumber, int totalNumMobDiffTypes, int mobPercentChance, List<string> genCreature)
+        static void CreatureGen(string mobType1, string mobType2, string mobType3, int mobTotalNumber, int totalNumMobDiffTypes, int mobPercentChance, 
+                                            List<string> genCreature, List<string> holdGenCreature)
         {
             Random rnd = new Random();
-
+            genCreature.Clear();
 
             while (mobTotalNumber > 0)
             {
@@ -421,11 +345,11 @@ namespace EQMud
 
             }
 
+            
 
 
         }
 
-        //static int MobStats(int mob1HP, int mob1AC, int mob1DmgMin, int mob1DmgMax, int mob2HP, int mob2AC, int mob2DmgMin, int mob2DmgMax, int mob3HP, int mob3AC, int mob3DmgMin, int mob3DmgMax, int mob4HP, int mob4AC, int mob4DmgMin, int mob4DmgMax, List<string> genCreature)
         static void MobStats(List<string> genCreature, List<string>holdGenCreature)
         {
             
@@ -488,7 +412,8 @@ namespace EQMud
 
 
 
-        static void CharLocation(int xLoc, int yLoc, ref int currentXPosition, ref int currentYPosition, ref string mobType1, ref string mobType2, ref string mobType3, ref int currentMobNum, ref int currentNumMobDiffTypes, ref int currentMobChance, ref bool possibleAreMobs) // Character locations with descriptions
+        static void CharLocation(int xLoc, int yLoc, ref int currentXPosition, ref int currentYPosition, ref string mobType1, ref string mobType2, ref string mobType3, ref int currentMobNum, 
+                                    ref int currentNumMobDiffTypes, ref int currentMobChance, ref bool possibleAreMobs, ref bool north, ref bool south, ref bool east, ref bool west) // Character locations with descriptions
         {
             
 
@@ -498,6 +423,8 @@ namespace EQMud
                 Console.WriteLine("FELWITH GATES");
                 currentXPosition = 10;
                 currentYPosition = 10;
+                east = false;
+                south = false;
             }
 
 
@@ -514,6 +441,7 @@ namespace EQMud
                 currentNumMobDiffTypes = 1; // how many different types of mobs in area
                 currentMobChance = 75;
                 possibleAreMobs = true;
+                east = false;
             }
 
             else if (xLoc == 10 && yLoc == 11) // GFay Hills and Trees NFelwith
@@ -528,6 +456,7 @@ namespace EQMud
                 currentNumMobDiffTypes = 3; // how many different types of mobs in area
                 currentMobChance = 75;
                 possibleAreMobs = true;
+                east = false;
             }
 
             else if (xLoc == 9 && yLoc == 11) // Bandit Camp
@@ -551,70 +480,68 @@ namespace EQMud
                 Console.WriteLine("LESSER FAYDARK ENTERANCE");
                 currentXPosition = 9;
                 currentYPosition = 10;
+                south = false;
             }
             else if (xLoc == 8 && yLoc == 10) // Wizard Combines
             {
                 Console.WriteLine("WIZARD COMBINES");
                 currentXPosition = 8;
                 currentYPosition = 10;
+                south = false;
             }
             else if (xLoc == 7 && yLoc == 10) // Butcherblock Enterance
             {
                 Console.WriteLine("BUTCHERBLOCK MTNS ENTERANCE");
                 currentXPosition = 7;
                 currentYPosition = 10;
+                west = false;
+                south = false;
             }
             else if (xLoc == 6 && yLoc == 10) // Butcherblock UNABLE TO ENTER
             {
-                Console.WriteLine("UNABLE TO MOVE WEST! THE ROAD TO BUTCHERBLOCK HAS A ROCK SLIDE YOUR CURRENTLY UNABLE TO PASS!");
-                Console.WriteLine("BUTCHERBLOCK MTNS ENTERANCE");
+                
                 currentXPosition = 7;
                 currentYPosition = 10;
 
             }
             else if (xLoc == 11 && yLoc == 10) // Felwith Gates CLOSED
             {
-                Console.WriteLine("UNABLE TO MOVE EAST! FELWITH GATES ARE CURRENTLY CLOSE! TRY AT LATER TIME");
-                Console.WriteLine("FELWITH GATES");
+                
                 currentXPosition = 10;
                 currentYPosition = 10;
 
             }
             else if (xLoc == 10 && yLoc == 9) // lesser faydark south, terrain too rough
             {
-                Console.WriteLine("UNABLE TO MOVE SOUTH! THE TERRAIN TO THE SOUTH IS TOO ROUGH TO PASS");
-                Console.WriteLine("FELWITH GATES");
+                
                 currentXPosition = 10;
                 currentYPosition = 10;
 
             }
             else if (xLoc == 9 && yLoc == 9) // lesser faydark south, road closed
             {
-                Console.WriteLine("UNABLE TO MOVE SOUTH! THE ROAD TO LESSER FAYDARK IS SEALED");
-                Console.WriteLine("LESSER FAYDARK ENTERANCE");
+                
                 currentXPosition = 9;
                 currentYPosition = 10;
 
             }
             else if (xLoc == 8 && yLoc == 9) // lesser faydark south, terrain too rough
             {
-                Console.WriteLine("UNABLE TO MOVE SOUTH! THE TERRAIN TO THE SOUTH IS TOO ROUGH TO PASS");
-                Console.WriteLine("WIZARD COMBINES");
+                
                 currentXPosition = 8;
                 currentYPosition = 10;
 
             }
             else if (xLoc == 7 && yLoc == 9) // lesser faydark south, terrain too rough
             {
-                Console.WriteLine("UNABLE TO MOVE SOUTH! THE TERRAIN TO THE SOUTH IS TOO ROUGH TO PASS");
-                Console.WriteLine("BUTCHERBLOCK MTNS ENTERANCE");
+                
                 currentXPosition = 7;
                 currentYPosition = 10;
 
             }
 
             //// replace gfay hills and trees Nfelwith here
-            
+
 
             ///// replace bandit camp here
 
@@ -630,26 +557,25 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAIN VALLEY");
                 currentXPosition = 7;
                 currentYPosition = 11;
+                west = false;
             }
             else if (xLoc == 6 && yLoc == 11) // Butcherblock to the west, mtns impassible
             {
-                Console.WriteLine("UNABLE TO MOVE WEST! THE MOUNTAINS ARE IMPASSIBLE!");
-                Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAIN VALLEY");
+                
                 currentXPosition = 7;
                 currentYPosition = 11;
 
             }
             else if (xLoc == 11 && yLoc == 11) // Gfay forest too dense to pass
             {
-                Console.WriteLine("UNABLE TO MOVE EAST! THE FOREST IS TOO DENSE, YOU'D PROBABLY GET LOST!");
-                Console.WriteLine("GREATER FAYDARK HILLS NORTH OF FELWITH");
+                
                 currentXPosition = 10;
                 currentYPosition = 11;
 
             }
 
             //// replace GFay forest deep 10,12
-            
+
             else if (xLoc == 9 && yLoc == 12) // GFay Forest
             {
                 Console.WriteLine("GREATER FAYDARK FOREST");
@@ -667,19 +593,19 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
                 currentXPosition = 7;
                 currentYPosition = 12;
+                west = false;
+
             }
             else if (xLoc == 6 && yLoc == 12) // Butcherblock to the west, mtns impassible
             {
-                Console.WriteLine("UNABLE TO MOVE WEST! THE MOUNTAINS ARE IMPASSIBLE!");
-                Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
+                
                 currentXPosition = 7;
                 currentYPosition = 12;
 
             }
             else if (xLoc == 11 && yLoc == 12) // Gfay forest too dense to pass
             {
-                Console.WriteLine("UNABLE TO MOVE EAST! THE FOREST IS TOO DENSE, YOU'D PROBABLY GET LOST!");
-                Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
+                
                 currentXPosition = 10;
                 currentYPosition = 12;
 
@@ -693,6 +619,7 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
                 currentXPosition = 10;
                 currentYPosition = 13;
+                east = false;
             }
             else if (xLoc == 9 && yLoc == 13) // Kelethin SE Lift
             {
@@ -711,19 +638,19 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
                 currentXPosition = 7;
                 currentYPosition = 13;
+                west = false;
+
             }
             else if (xLoc == 6 && yLoc == 13) // Butcherblock to the west, mtns impassible
             {
-                Console.WriteLine("UNABLE TO MOVE WEST! THE MOUNTAINS ARE IMPASSIBLE!");
-                Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
+                
                 currentXPosition = 7;
                 currentYPosition = 13;
 
             }
             else if (xLoc == 11 && yLoc == 13) // Gfay forest too dense to pass
             {
-                Console.WriteLine("UNABLE TO MOVE EAST! THE FOREST IS TOO DENSE, YOU'D PROBABLY GET LOST!");
-                Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
+                
                 currentXPosition = 10;
                 currentYPosition = 13;
 
@@ -738,6 +665,8 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
                 currentXPosition = 10;
                 currentYPosition = 14;
+                east = false;
+
             }
             else if (xLoc == 9 && yLoc == 14) // GFay Forest Kelethin Above
             {
@@ -756,19 +685,19 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
                 currentXPosition = 7;
                 currentYPosition = 14;
+                west = false;
+
             }
             else if (xLoc == 6 && yLoc == 14) // Butcherblock to the west, mtns impassible
             {
-                Console.WriteLine("UNABLE TO MOVE WEST! THE MOUNTAINS ARE IMPASSIBLE!");
-                Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
+                
                 currentXPosition = 7;
                 currentYPosition = 14;
 
             }
             else if (xLoc == 11 && yLoc == 14) // Gfay forest too dense to pass
             {
-                Console.WriteLine("UNABLE TO MOVE EAST! THE FOREST IS TOO DENSE, YOU'D PROBABLY GET LOST!");
-                Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
+                
                 currentXPosition = 10;
                 currentYPosition = 14;
 
@@ -782,6 +711,8 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
                 currentXPosition = 10;
                 currentYPosition = 15;
+                east = false;
+
             }
             else if (xLoc == 9 && yLoc == 15) // GFay Abandoned Druid Ring
             {
@@ -800,19 +731,19 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
                 currentXPosition = 7;
                 currentYPosition = 15;
+                west = false;
+
             }
             else if (xLoc == 6 && yLoc == 15) // Butcherblock to the west, mtns impassible
             {
-                Console.WriteLine("UNABLE TO MOVE WEST! THE MOUNTAINS ARE IMPASSIBLE!");
-                Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
+                
                 currentXPosition = 7;
                 currentYPosition = 15;
 
             }
             else if (xLoc == 11 && yLoc == 15) // Gfay forest too dense to pass
             {
-                Console.WriteLine("UNABLE TO MOVE EAST! THE FOREST IS TOO DENSE, YOU'D PROBABLY GET LOST!");
-                Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
+                
                 currentXPosition = 10;
                 currentYPosition = 15;
 
@@ -826,6 +757,8 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
                 currentXPosition = 10;
                 currentYPosition = 16;
+                east = false;
+
             }
             else if (xLoc == 9 && yLoc == 16) // GFay Forest
             {
@@ -844,19 +777,19 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
                 currentXPosition = 7;
                 currentYPosition = 16;
+                west = false;
+
             }
             else if (xLoc == 6 && yLoc == 16) // Butcherblock to the west, mtns impassible
             {
-                Console.WriteLine("UNABLE TO MOVE WEST! THE MOUNTAINS ARE IMPASSIBLE!");
-                Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
+                
                 currentXPosition = 7;
                 currentYPosition = 16;
 
             }
             else if (xLoc == 11 && yLoc == 16) // Gfay forest too dense to pass
             {
-                Console.WriteLine("UNABLE TO MOVE EAST! THE FOREST IS TOO DENSE, YOU'D PROBABLY GET LOST!");
-                Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
+                
                 currentXPosition = 10;
                 currentYPosition = 16;
 
@@ -870,6 +803,8 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
                 currentXPosition = 10;
                 currentYPosition = 17;
+                east = false;
+
             }
             else if (xLoc == 9 && yLoc == 17) // GFay Forest
             {
@@ -888,19 +823,19 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
                 currentXPosition = 7;
                 currentYPosition = 17;
+                west = false;
+
             }
             else if (xLoc == 6 && yLoc == 17) // Butcherblock to the west, mtns impassible
             {
-                Console.WriteLine("UNABLE TO MOVE WEST! THE MOUNTAINS ARE IMPASSIBLE!");
-                Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
+                
                 currentXPosition = 7;
                 currentYPosition = 17;
 
             }
             else if (xLoc == 11 && yLoc == 17) // Gfay forest too dense to pass
             {
-                Console.WriteLine("UNABLE TO MOVE EAST! THE FOREST IS TOO DENSE, YOU'D PROBABLY GET LOST!");
-                Console.WriteLine("GREATER FAYDARK FOREST GETTING THICKER");
+                
                 currentXPosition = 10;
                 currentYPosition = 17;
 
@@ -915,6 +850,8 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST SMALLER CLIFFS IN AREA");
                 currentXPosition = 10;
                 currentYPosition = 18;
+                east = false;
+
             }
             else if (xLoc == 9 && yLoc == 18) // GFay Forest Smaller Orc Camps
             {
@@ -933,19 +870,19 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
                 currentXPosition = 7;
                 currentYPosition = 18;
+                west = false;
+
             }
             else if (xLoc == 6 && yLoc == 18) // Butcherblock to the west, mtns impassible
             {
-                Console.WriteLine("UNABLE TO MOVE WEST! THE MOUNTAINS ARE IMPASSIBLE!");
-                Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS");
+                
                 currentXPosition = 7;
                 currentYPosition = 18;
 
             }
             else if (xLoc == 11 && yLoc == 18) // Gfay forest too dense to pass
             {
-                Console.WriteLine("UNABLE TO MOVE EAST! THE FOREST IS TOO DENSE, YOU'D PROBABLY GET LOST!");
-                Console.WriteLine("GREATER FAYDARK FOREST SMALLER CLIFFS IN AREA");
+                
                 currentXPosition = 10;
                 currentYPosition = 18;
 
@@ -959,6 +896,8 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST EXTREAM CLIFF FACES");
                 currentXPosition = 10;
                 currentYPosition = 19;
+                east = false;
+
             }
             else if (xLoc == 9 && yLoc == 19) // GFay Forest Medium Orc Camps
             {
@@ -977,19 +916,19 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS AND MEDIUM ORC HUTS IN AREA");
                 currentXPosition = 7;
                 currentYPosition = 19;
+                west = false;
+
             }
             else if (xLoc == 6 && yLoc == 19) // Butcherblock to the west, mtns impassible
             {
-                Console.WriteLine("UNABLE TO MOVE WEST! THE MOUNTAINS ARE IMPASSIBLE!");
-                Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS AND MEDIUM ORC HUTS IN AREA");
+                
                 currentXPosition = 7;
                 currentYPosition = 19;
 
             }
             else if (xLoc == 11 && yLoc == 19) // Gfay forest, cliffs impassible
             {
-                Console.WriteLine("UNABLE TO MOVE EAST! IMPASSIBLE CLIFFS!");
-                Console.WriteLine("GREATER FAYDARK FOREST EXTREAM CLIFF FACES");
+                
                 currentXPosition = 10;
                 currentYPosition = 19;
 
@@ -1003,74 +942,75 @@ namespace EQMud
                 Console.WriteLine("GREATER FAYDARK FOREST EXTREAM CLIFF FACES ON TWO SIDES OF YOU");
                 currentXPosition = 10;
                 currentYPosition = 20;
+                east = false;
+                north = false;
+
             }
             else if (xLoc == 9 && yLoc == 20) // GFay Cliffs
             {
                 Console.WriteLine("GREATER FAYDARK FOREST MERGING TO SHARP CLIFF FACE");
                 currentXPosition = 9;
                 currentYPosition = 20;
+                north = false;
             }
             else if (xLoc == 8 && yLoc == 20) // GFay Crushbone Enterance
             {
                 Console.WriteLine("GREATER FAYDARK WITH CRUSHBONE ENTERANCE GUARDED");
                 currentXPosition = 8;
                 currentYPosition = 20;
+                north = false;
             }
             else if (xLoc == 7 && yLoc == 20) // GFay Forest Mtns Merging with Cliffs
             {
                 Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS AND MERGING WITH CLIFFS");
                 currentXPosition = 7;
                 currentYPosition = 20;
+                west = false;
+                north = false;
             }
             else if (xLoc == 6 && yLoc == 20) // Butcherblock to the west, mtns impassible
             {
-                Console.WriteLine("UNABLE TO MOVE WEST! THE MOUNTAINS ARE IMPASSIBLE!");
-                Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS AND MERGING WITH CLIFFS");
+                
                 currentXPosition = 7;
                 currentYPosition = 20;
 
             }
             else if (xLoc == 11 && yLoc == 20) // Gfay forest too dense to pass
             {
-                Console.WriteLine("UNABLE TO MOVE EAST! IMPASSIBLE CLIFFS!");
-                Console.WriteLine("GREATER FAYDARK FOREST EXTREME CLIFF FACES ON TWO SIDES OF YOU");
+                
                 currentXPosition = 10;
                 currentYPosition = 20;
             }
             else if (xLoc == 7 && yLoc == 21) // Crushbone north, cliffs impassible
             {
-                Console.WriteLine("UNABLE TO MOVE NORTH! THE CLIFFS ARE IMPASSIBLE!");
-                Console.WriteLine("GREATER FAYDARK FOREST BOARDING MOUNTAINS AND MERGING WITH CLIFFS");
+                
                 currentXPosition = 7;
                 currentYPosition = 20;
 
             }
             else if (xLoc == 10 && yLoc == 21) // Crushbone north, cliffs impassible
             {
-                Console.WriteLine("UNABLE TO MOVE NORTH! IMPASSIBLE CLIFFS!");
-                Console.WriteLine("GREATER FAYDARK FOREST EXTREME CLIFF FACES ON TWO SIDES OF YOU");
+                
                 currentXPosition = 10;
                 currentYPosition = 20;
             }
             else if (xLoc == 8 && yLoc == 21) // Crushbone north, enterance guarded
             {
-                Console.WriteLine("UNABLE TO MOVE NORTH! THE ENTERANCE TO CRUSHBONE IN GUARDED BY MANY ORCS!");
-                Console.WriteLine("GREATER FAYDARK WITH CRUSHBONE ENTERANCE GUARDED");
+                
                 currentXPosition = 8;
                 currentYPosition = 20;
 
             }
             else if (xLoc == 9 && yLoc == 21) // Crushbone north, cliffs impassible
             {
-                Console.WriteLine("UNABLE TO MOVE NORTH! IMPASSIBLE CLIFFS!");
-                Console.WriteLine("GREATER FAYDARK FOREST WITH EXTREME CLIFF FACE TO THE NORTH");
+                
                 currentXPosition = 9;
                 currentYPosition = 20;
             }
 
 
 
-            
+
 
         }
 
