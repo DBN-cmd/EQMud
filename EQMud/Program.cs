@@ -11,8 +11,8 @@ namespace EQMud
         static void Main(string[] args)
         {
             bool isCampingOut = false;
-            
-            //bool prevMobs = false;
+            bool possibleMobs = false;
+            bool prevMobs = false;
             int xCoord = 10;
             int yCoord = 10;
             int currentXPosition = 10;
@@ -24,7 +24,7 @@ namespace EQMud
             int numMobDiffTypes = 0;
             int mobChance = 0;
             var genCreature = new List<string>();
-            var holdGenCreature = new List<string>();
+            //var holdGenCreature = new List<string>();
             int mob1HP = 0;
             int mob1AC = 0;
             int mob1DmgMin= 0;
@@ -55,58 +55,49 @@ namespace EQMud
             while (!isCampingOut)
             {
                 Console.WriteLine("\n\n");
-                bool possibleAreMobs = false;
                 bool north = true;
                 bool south = true;
                 bool east = true;
                 bool west = true;
-                CharLocation(xCoord, yCoord, ref currentXPosition, ref currentYPosition, ref mobType1, ref mobType2, ref mobType3, ref mobNum, ref numMobDiffTypes, ref mobChance, 
-                                    ref possibleAreMobs, ref north, ref south, ref east, ref west);
+                Console.WriteLine(genCreature.Count());
+                
+                
+
+                CharLocation(xCoord, yCoord, ref currentXPosition, ref currentYPosition, ref mobType1, ref mobType2, ref mobType3, ref mobNum, ref numMobDiffTypes, ref mobChance,
+                                    ref possibleMobs, ref prevMobs,ref north, ref south, ref east, ref west);
                 xCoord = currentXPosition;
                 yCoord = currentYPosition;
-                //CharLocation(xCoord, yCoord, ref currentXPosition, ref currentYPosition, ref mobType1, ref mobType2, ref mobType3, ref mobNum, ref numMobDiffTypes, ref mobChance, ref possibleAreMobs);
+
 
                 Console.WriteLine($"Current xCoord is: {xCoord}");
                 Console.WriteLine($"Current yCoord is: {yCoord}\n");
-                //Console.WriteLine(mobType1);
-                //Console.WriteLine(mobType2);
-                //Console.WriteLine(mobType3);
-
-                //if (holdGenCreature.Count() > 2)
-                //{
-                //    CharMovement(genCreature, holdGenCreature, ref isCampingOut, ref xCoord, ref yCoord, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC, 
-                //                    ref mob2DmgMin, ref mob2DmgMax, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, ref mob4DmgMax);
-               
-                    
-                //    // DiscribeWithPreMobs:
-                //    //holdGenCreature = genCreature;
-                //    //holdGenCreature.Clear();
-
-                //    //Console.WriteLine("******genCreature********");
-                //    //foreach (var mob in genCreature)
-                //    //{
-                //    //    Console.WriteLine(mob);
-                //    //    //MobTypes(genCreture, mobType1);
-                //    //}
-                //    //Console.WriteLine("**************");
-
-                    
-                //}
+                
 
 
-                if (possibleAreMobs)
+                if (prevMobs)
                 {
-                    CreatureGen(mobType1, mobType2, mobType3, mobNum, numMobDiffTypes, mobChance, genCreature, holdGenCreature); // need to assign another var to skip this if it already gen creatures
+                    
+                    CharMovement(genCreature, ref isCampingOut, ref xCoord, ref yCoord, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC,
+                                   ref mob2DmgMin, ref mob2DmgMax, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, ref mob4DmgMax,
+                                   ref north, ref south, ref east, ref west, ref prevMobs);
+                }
+                else if (possibleMobs)
+                {
                     
 
-                    MobStats(genCreature, holdGenCreature);
+                    genCreature.Clear();
+
+                    CreatureGen(mobType1, mobType2, mobType3, mobNum, numMobDiffTypes, mobChance, genCreature, ref possibleMobs, ref prevMobs); // need to assign another var to skip this if it already gen creatures
+                    
+
+                    MobStats(genCreature);
 
                     MobStatAssign(genCreature, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC, ref mob2DmgMin, ref mob2DmgMax, 
                                     ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, ref mob4DmgMax);
 
-                    CharMovement(genCreature, holdGenCreature, ref isCampingOut, ref xCoord, ref yCoord, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC,
+                    CharMovement(genCreature, ref isCampingOut, ref xCoord, ref yCoord, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC,
                                    ref mob2DmgMin, ref mob2DmgMax, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, ref mob4DmgMax,
-                                   ref north, ref south, ref east, ref west);
+                                   ref north, ref south, ref east, ref west, ref prevMobs);
 
 
 
@@ -115,20 +106,21 @@ namespace EQMud
                 }
                 else
                 {
-                    holdGenCreature.Clear();
-                    CharMovement(genCreature, holdGenCreature, ref isCampingOut, ref xCoord, ref yCoord, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC,
+                   
+                    
+                    CharMovement(genCreature, ref isCampingOut, ref xCoord, ref yCoord, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC,
                                    ref mob2DmgMin, ref mob2DmgMax, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, ref mob4DmgMax,
-                                   ref north, ref south, ref east, ref west);
+                                   ref north, ref south, ref east, ref west, ref prevMobs);
                 }
                 
             }
 
         }
 
-        static void CharMovement(List<string>genCreature, List<string> holdGenCreature, ref bool isCampingOut, ref int xCoord, ref int yCoord, ref int mob1HP, ref int mob1AC, 
+        static void CharMovement(List<string>genCreature, ref bool isCampingOut, ref int xCoord, ref int yCoord, ref int mob1HP, ref int mob1AC, 
                                         ref int mob1DmgMin, ref int mob1DmgMax, ref int mob2HP, ref int mob2AC, ref int mob2DmgMin, ref int mob2DmgMax, ref int mob3HP, ref int mob3AC, 
                                         ref int mob3DmgMin, ref int mob3DmgMax, ref int mob4HP, ref int mob4AC, ref int mob4DmgMin, ref int mob4DmgMax, ref bool north, ref bool south, 
-                                        ref bool east, ref bool west)
+                                        ref bool east, ref bool west, ref bool prevMobs)
         {
             DiscribeArea:
 
@@ -143,6 +135,7 @@ namespace EQMud
                         Console.WriteLine("You are unable to mobe in that direction!");
                         break;
                     }
+                    
                     else
                     {
                         yCoord += 1;
@@ -188,18 +181,36 @@ namespace EQMud
                     }
                     break;
 
-                case "ATK":
-                case "ATTACK":
-
                 case "DISC":
                 case "DISCRIBE":
+                    Console.WriteLine("The following is in this area:");
+                    int mobCount = genCreature.Count();
+                    if (mobCount > 1)
+                    {
+                        Console.WriteLine($"a {genCreature[0]}");
+
+                        if (mobCount > 5)
+                        {
+                            Console.WriteLine($"a {genCreature[5]}");
+
+                            if (mobCount > 10)
+                            {
+                                Console.WriteLine($"a {genCreature[10]}");
+
+                                if (mobCount > 15)
+                                {
+                                    Console.WriteLine($"a {genCreature[15]} appears!");
+                                }
+                            }
+                        }
+                    }
                     goto DiscribeArea;
                     
 
                 case "P":
-                    Console.WriteLine("******holdGenCreature********");
+                    Console.WriteLine("******genCreature********");
 
-                    foreach (string x in holdGenCreature)
+                    foreach (string x in genCreature)
                     {
                         Console.WriteLine(x);
                     }
@@ -229,6 +240,7 @@ namespace EQMud
 
 
                 default:
+                    Console.WriteLine("Please enter a correct command!");
                     goto DiscribeArea;
 
                 case "CAMP":
@@ -241,69 +253,17 @@ namespace EQMud
 
         }
 
-        static void MobStatAssign(List<string> genCreature, ref int mob1HP, ref int mob1AC, ref int mob1DmgMin, ref int mob1DmgMax, ref int mob2HP, ref int mob2AC, ref int mob2DmgMin, 
-                                    ref int mob2DmgMax, ref int mob3HP, ref int mob3AC, ref int mob3DmgMin, ref int mob3DmgMax, ref int mob4HP, ref int mob4AC, 
-                                    ref int mob4DmgMin, ref int mob4DmgMax)
-        {
-            int mobCount = genCreature.Count();
-
-        
-            Console.WriteLine("The following is in the area:");
-
-
-            
-            if (mobCount > 1)
-            {
-                Console.WriteLine($"a {genCreature[0]} appears!");
-                mob1HP = Convert.ToInt32(genCreature[1]);
-                mob1AC = Convert.ToInt32(genCreature[2]);
-                mob1DmgMin = Convert.ToInt32(genCreature[3]);
-                mob1DmgMax = Convert.ToInt32(genCreature[4]);
-
-                if (mobCount > 5)
-                {
-                    Console.WriteLine($"a {genCreature[5]} appears!");
-                    mob2HP = Convert.ToInt32(genCreature[6]);
-                    mob2AC = Convert.ToInt32(genCreature[7]);
-                    mob2DmgMin = Convert.ToInt32(genCreature[8]);
-                    mob2DmgMax = Convert.ToInt32(genCreature[9]);
-
-                    if (mobCount > 10)
-                    {
-                        Console.WriteLine($"a {genCreature[10]} appears!");
-                        mob3HP = Convert.ToInt32(genCreature[11]);
-                        mob3AC = Convert.ToInt32(genCreature[12]);
-                        mob3DmgMin = Convert.ToInt32(genCreature[13]);
-                        mob3DmgMax = Convert.ToInt32(genCreature[14]);
-
-                        if (mobCount > 15)
-                        {
-                            Console.WriteLine($"a {genCreature[15]} appears!");
-                            mob4HP = Convert.ToInt32(genCreature[16]);
-                            mob4AC = Convert.ToInt32(genCreature[17]);
-                            mob4DmgMin = Convert.ToInt32(genCreature[18]);
-                            mob4DmgMax = Convert.ToInt32(genCreature[19]);
-
-                        }
-                    }
-
-                }
-            }
-        }
-            
-
-
-        static void CreatureGen(string mobType1, string mobType2, string mobType3, int mobTotalNumber, int totalNumMobDiffTypes, int mobPercentChance, 
-                                            List<string> genCreature, List<string> holdGenCreature)
+        static void CreatureGen(string mobType1, string mobType2, string mobType3, int mobTotalNumber, int totalNumMobDiffTypes, int mobPercentChance,
+                                            List<string> genCreature, ref bool possibleAreMobs, ref bool prevMobs)
         {
             Random rnd = new Random();
-            genCreature.Clear();
+            //genCreature.Clear();
 
             while (mobTotalNumber > 0)
             {
-                int baseChance = 1;
-                //int baseChance = rnd.Next(1, 101);
-                //Console.WriteLine(baseChance);
+                //int baseChance = 1;
+                int baseChance = rnd.Next(1, 101);
+                Console.WriteLine(baseChance);
 
                 if (baseChance < mobPercentChance)
                 {
@@ -345,14 +305,20 @@ namespace EQMud
 
             }
 
-            
+            if (genCreature.Count() > 1)
+            {
+                possibleAreMobs = false;
+                prevMobs = true;
+            }
 
 
         }
 
-        static void MobStats(List<string> genCreature, List<string>holdGenCreature)
+
+
+        static void MobStats(List<string> genCreature)
         {
-            
+
             int numMob = genCreature.Count();
             Console.WriteLine(numMob);
 
@@ -370,7 +336,7 @@ namespace EQMud
                     genCreature.Insert(indexCount, "2");
                     genCreature.Insert(indexCount, "8");
                     genCreature.Insert(indexCount, "10");
-                 
+
                 }
                 else if (genCreature[indexCount] == "bat")
                 {
@@ -379,7 +345,7 @@ namespace EQMud
                     genCreature.Insert(indexCount, "1");
                     genCreature.Insert(indexCount, "4");
                     genCreature.Insert(indexCount, "6");
-                 
+
                 }
                 else if (genCreature[indexCount] == "bee")
                 {
@@ -404,16 +370,70 @@ namespace EQMud
                     indexCount += 1;
                 }
 
-                //List<string> passGenCreature = new List<string>(genCreature);
-                //holdGenCreature = passGenCreature;
+
             }
 
         }
 
 
+        static void MobStatAssign(List<string> genCreature, ref int mob1HP, ref int mob1AC, ref int mob1DmgMin, ref int mob1DmgMax, ref int mob2HP, ref int mob2AC, ref int mob2DmgMin, 
+                                    ref int mob2DmgMax, ref int mob3HP, ref int mob3AC, ref int mob3DmgMin, ref int mob3DmgMax, ref int mob4HP, ref int mob4AC, 
+                                    ref int mob4DmgMin, ref int mob4DmgMax)
+        {
+            int mobCount = genCreature.Count();
+
+        
+            Console.WriteLine("The following is in the area:");
+
+
+
+            if (mobCount > 1)
+            {
+                Console.WriteLine($"a {genCreature[0]} appears!");
+                mob1HP = Convert.ToInt32(genCreature[1]);
+                mob1AC = Convert.ToInt32(genCreature[2]);
+                mob1DmgMin = Convert.ToInt32(genCreature[3]);
+                mob1DmgMax = Convert.ToInt32(genCreature[4]);
+
+                if (mobCount > 5)
+                {
+                    Console.WriteLine($"a {genCreature[5]} appears!");
+                    mob2HP = Convert.ToInt32(genCreature[6]);
+                    mob2AC = Convert.ToInt32(genCreature[7]);
+                    mob2DmgMin = Convert.ToInt32(genCreature[8]);
+                    mob2DmgMax = Convert.ToInt32(genCreature[9]);
+
+                    if (mobCount > 10)
+                    {
+                        Console.WriteLine($"a {genCreature[10]} appears!");
+                        mob3HP = Convert.ToInt32(genCreature[11]);
+                        mob3AC = Convert.ToInt32(genCreature[12]);
+                        mob3DmgMin = Convert.ToInt32(genCreature[13]);
+                        mob3DmgMax = Convert.ToInt32(genCreature[14]);
+
+                        if (mobCount > 15)
+                        {
+                            Console.WriteLine($"a {genCreature[15]} appears!");
+                            mob4HP = Convert.ToInt32(genCreature[16]);
+                            mob4AC = Convert.ToInt32(genCreature[17]);
+                            mob4DmgMin = Convert.ToInt32(genCreature[18]);
+                            mob4DmgMax = Convert.ToInt32(genCreature[19]);
+
+                        }
+                    }
+
+                }
+            }
+        }
+            
+
+
+        
+
+
 
         static void CharLocation(int xLoc, int yLoc, ref int currentXPosition, ref int currentYPosition, ref string mobType1, ref string mobType2, ref string mobType3, ref int currentMobNum, 
-                                    ref int currentNumMobDiffTypes, ref int currentMobChance, ref bool possibleAreMobs, ref bool north, ref bool south, ref bool east, ref bool west) // Character locations with descriptions
+                                    ref int currentNumMobDiffTypes, ref int currentMobChance, ref bool possibleAreMobs, ref bool prevMobs, ref bool north, ref bool south, ref bool east, ref bool west) // Character locations with descriptions
         {
             
 
@@ -499,45 +519,33 @@ namespace EQMud
             }
             else if (xLoc == 6 && yLoc == 10) // Butcherblock UNABLE TO ENTER
             {
-                
                 currentXPosition = 7;
                 currentYPosition = 10;
-
             }
             else if (xLoc == 11 && yLoc == 10) // Felwith Gates CLOSED
             {
-                
                 currentXPosition = 10;
                 currentYPosition = 10;
-
             }
             else if (xLoc == 10 && yLoc == 9) // lesser faydark south, terrain too rough
             {
-                
                 currentXPosition = 10;
                 currentYPosition = 10;
-
             }
             else if (xLoc == 9 && yLoc == 9) // lesser faydark south, road closed
             {
-                
                 currentXPosition = 9;
                 currentYPosition = 10;
-
             }
             else if (xLoc == 8 && yLoc == 9) // lesser faydark south, terrain too rough
             {
-                
                 currentXPosition = 8;
                 currentYPosition = 10;
-
             }
             else if (xLoc == 7 && yLoc == 9) // lesser faydark south, terrain too rough
             {
-                
                 currentXPosition = 7;
                 currentYPosition = 10;
-
             }
 
             //// replace gfay hills and trees Nfelwith here
@@ -561,17 +569,13 @@ namespace EQMud
             }
             else if (xLoc == 6 && yLoc == 11) // Butcherblock to the west, mtns impassible
             {
-                
                 currentXPosition = 7;
                 currentYPosition = 11;
-
             }
             else if (xLoc == 11 && yLoc == 11) // Gfay forest too dense to pass
             {
-                
                 currentXPosition = 10;
                 currentYPosition = 11;
-
             }
 
             //// replace GFay forest deep 10,12
@@ -594,23 +598,17 @@ namespace EQMud
                 currentXPosition = 7;
                 currentYPosition = 12;
                 west = false;
-
             }
             else if (xLoc == 6 && yLoc == 12) // Butcherblock to the west, mtns impassible
             {
-                
                 currentXPosition = 7;
                 currentYPosition = 12;
-
             }
             else if (xLoc == 11 && yLoc == 12) // Gfay forest too dense to pass
             {
-                
                 currentXPosition = 10;
                 currentYPosition = 12;
-
             }
-
 
 
 
@@ -639,24 +637,17 @@ namespace EQMud
                 currentXPosition = 7;
                 currentYPosition = 13;
                 west = false;
-
             }
             else if (xLoc == 6 && yLoc == 13) // Butcherblock to the west, mtns impassible
             {
-                
                 currentXPosition = 7;
                 currentYPosition = 13;
-
             }
             else if (xLoc == 11 && yLoc == 13) // Gfay forest too dense to pass
             {
-                
                 currentXPosition = 10;
                 currentYPosition = 13;
-
             }
-
-
 
 
 
@@ -666,7 +657,6 @@ namespace EQMud
                 currentXPosition = 10;
                 currentYPosition = 14;
                 east = false;
-
             }
             else if (xLoc == 9 && yLoc == 14) // GFay Forest Kelethin Above
             {
@@ -686,23 +676,17 @@ namespace EQMud
                 currentXPosition = 7;
                 currentYPosition = 14;
                 west = false;
-
             }
             else if (xLoc == 6 && yLoc == 14) // Butcherblock to the west, mtns impassible
             {
-                
                 currentXPosition = 7;
                 currentYPosition = 14;
-
             }
             else if (xLoc == 11 && yLoc == 14) // Gfay forest too dense to pass
             {
-                
                 currentXPosition = 10;
                 currentYPosition = 14;
-
             }
-
 
 
 
@@ -712,7 +696,6 @@ namespace EQMud
                 currentXPosition = 10;
                 currentYPosition = 15;
                 east = false;
-
             }
             else if (xLoc == 9 && yLoc == 15) // GFay Abandoned Druid Ring
             {
@@ -732,23 +715,17 @@ namespace EQMud
                 currentXPosition = 7;
                 currentYPosition = 15;
                 west = false;
-
             }
             else if (xLoc == 6 && yLoc == 15) // Butcherblock to the west, mtns impassible
             {
-                
                 currentXPosition = 7;
                 currentYPosition = 15;
-
             }
             else if (xLoc == 11 && yLoc == 15) // Gfay forest too dense to pass
             {
-                
                 currentXPosition = 10;
                 currentYPosition = 15;
-
             }
-
 
 
 
@@ -758,7 +735,6 @@ namespace EQMud
                 currentXPosition = 10;
                 currentYPosition = 16;
                 east = false;
-
             }
             else if (xLoc == 9 && yLoc == 16) // GFay Forest
             {
@@ -778,23 +754,17 @@ namespace EQMud
                 currentXPosition = 7;
                 currentYPosition = 16;
                 west = false;
-
             }
             else if (xLoc == 6 && yLoc == 16) // Butcherblock to the west, mtns impassible
             {
-                
                 currentXPosition = 7;
                 currentYPosition = 16;
-
             }
             else if (xLoc == 11 && yLoc == 16) // Gfay forest too dense to pass
             {
-                
                 currentXPosition = 10;
                 currentYPosition = 16;
-
             }
-
 
 
 
@@ -804,7 +774,6 @@ namespace EQMud
                 currentXPosition = 10;
                 currentYPosition = 17;
                 east = false;
-
             }
             else if (xLoc == 9 && yLoc == 17) // GFay Forest
             {
@@ -824,24 +793,17 @@ namespace EQMud
                 currentXPosition = 7;
                 currentYPosition = 17;
                 west = false;
-
             }
             else if (xLoc == 6 && yLoc == 17) // Butcherblock to the west, mtns impassible
             {
-                
                 currentXPosition = 7;
                 currentYPosition = 17;
-
             }
             else if (xLoc == 11 && yLoc == 17) // Gfay forest too dense to pass
             {
-                
                 currentXPosition = 10;
                 currentYPosition = 17;
-
             }
-
-
 
 
 
@@ -851,7 +813,6 @@ namespace EQMud
                 currentXPosition = 10;
                 currentYPosition = 18;
                 east = false;
-
             }
             else if (xLoc == 9 && yLoc == 18) // GFay Forest Smaller Orc Camps
             {
@@ -871,23 +832,17 @@ namespace EQMud
                 currentXPosition = 7;
                 currentYPosition = 18;
                 west = false;
-
             }
             else if (xLoc == 6 && yLoc == 18) // Butcherblock to the west, mtns impassible
             {
-                
                 currentXPosition = 7;
                 currentYPosition = 18;
-
             }
             else if (xLoc == 11 && yLoc == 18) // Gfay forest too dense to pass
             {
-                
                 currentXPosition = 10;
                 currentYPosition = 18;
-
             }
-
 
 
 
@@ -897,7 +852,6 @@ namespace EQMud
                 currentXPosition = 10;
                 currentYPosition = 19;
                 east = false;
-
             }
             else if (xLoc == 9 && yLoc == 19) // GFay Forest Medium Orc Camps
             {
@@ -917,23 +871,17 @@ namespace EQMud
                 currentXPosition = 7;
                 currentYPosition = 19;
                 west = false;
-
             }
             else if (xLoc == 6 && yLoc == 19) // Butcherblock to the west, mtns impassible
             {
-                
                 currentXPosition = 7;
                 currentYPosition = 19;
-
             }
             else if (xLoc == 11 && yLoc == 19) // Gfay forest, cliffs impassible
             {
-                
                 currentXPosition = 10;
                 currentYPosition = 19;
-
             }
-
 
 
 
@@ -944,7 +892,6 @@ namespace EQMud
                 currentYPosition = 20;
                 east = false;
                 north = false;
-
             }
             else if (xLoc == 9 && yLoc == 20) // GFay Cliffs
             {
@@ -970,189 +917,37 @@ namespace EQMud
             }
             else if (xLoc == 6 && yLoc == 20) // Butcherblock to the west, mtns impassible
             {
-                
                 currentXPosition = 7;
                 currentYPosition = 20;
-
             }
             else if (xLoc == 11 && yLoc == 20) // Gfay forest too dense to pass
             {
-                
                 currentXPosition = 10;
                 currentYPosition = 20;
             }
+
+
+
             else if (xLoc == 7 && yLoc == 21) // Crushbone north, cliffs impassible
             {
-                
                 currentXPosition = 7;
                 currentYPosition = 20;
-
             }
             else if (xLoc == 10 && yLoc == 21) // Crushbone north, cliffs impassible
             {
-                
                 currentXPosition = 10;
                 currentYPosition = 20;
             }
             else if (xLoc == 8 && yLoc == 21) // Crushbone north, enterance guarded
             {
-                
                 currentXPosition = 8;
                 currentYPosition = 20;
-
             }
             else if (xLoc == 9 && yLoc == 21) // Crushbone north, cliffs impassible
             {
-                
                 currentXPosition = 9;
                 currentYPosition = 20;
             }
-
-
-
-
-
         }
-
-               
-        
-        //static void MobTypes(List<string>genCreature, int mobType1)
-        //{
-        //    int checkMob = genCreature.Count();
-        //    int mobCount = 0;
-
-        //    while(mobCount < checkMob)
-        //    {
-        //        if (genCreature[mobCount] == "genType1")
-        //        {
-        //            int checkMobType = 1;
-        //            while (checkMobType <= 4)
-        //            {
-        //                if (mobType1 == 1)
-        //                {
-        //                    Console.WriteLine("a Bandit appears!");
-        //                    checkMobType += 1;
-        //                    mobCount += 1;
-        //                }
-        //                else if (mobType1 == 2)
-        //                {
-        //                    Console.WriteLine("a bat appears!");
-        //                    checkMobType += 1;
-        //                    mobCount += 1;
-        //                }
-        //                else if (mobType1 == 3)
-        //                {
-        //                    Console.WriteLine("a bee appears!");
-        //                    checkMobType += 1;
-        //                    mobCount += 1;
-        //                }
-        //            }
-        //        }
-        //        else if (genCreature[mobCount] == "genType2")
-        //        {
-        //            int checkMobType = 1;
-        //            while (checkMobType <= 4)
-        //            {
-        //                if (mobType1 == 1)
-        //                {
-        //                    Console.WriteLine("a Bandit appears!");
-        //                    checkMobType += 1;
-        //                    mobCount += 1;
-        //                }
-        //                else if (mobType1 == 2)
-        //                {
-        //                    Console.WriteLine("a bat appears!");
-        //                    checkMobType += 1;
-        //                    mobCount += 1;
-        //                }
-        //                else if (mobType1 == 3)
-        //                {
-        //                    Console.WriteLine("a bee appears!");
-        //                    checkMobType += 1;
-        //                    mobCount += 1;
-        //                }
-        //            }
-        //        }
-        //        else if (genCreature[mobCount] == "genType3")
-        //        {
-        //            int checkMobType = 1;
-        //            while (checkMobType <= 4)
-        //            {
-        //                if (mobType1 == 1)
-        //                {
-        //                    Console.WriteLine("a Bandit appears!");
-        //                    checkMobType += 1;
-        //                    mobCount += 1;
-        //                }
-        //                else if (mobType1 == 2)
-        //                {
-        //                    Console.WriteLine("a bat appears!");
-        //                    checkMobType += 1;
-        //                    mobCount += 1;
-        //                }
-        //                else if (mobType1 == 3)
-        //                {
-        //                    Console.WriteLine("a bee appears!");
-        //                    checkMobType += 1;
-        //                    mobCount += 1;
-        //                }
-        //                else if (mobType1 == 4)
-        //                {
-        //                    Console.WriteLine("a fairy appears!");
-        //                    checkMobType += 1;
-        //                    mobCount += 1;
-        //                }
-        //            }
-        //        }
-        //        else
-        //        {
-                    
-        //            break;
-        //        }
-        //    }
-
-
-            //if (genCreature[0] == "genType1" && mobType1 == 1)
-            //{
-            //    Console.WriteLine("a Bandit appears!");
-            //}
-
-            //if (actMobName == "genType1") 
-            //{
-            //    Console.WriteLine("a Bandit appears!");
-            //    int trueMobName = 1;
-            //    // ref out hp/ac/dmg rang of mob
-            //    return trueMobName;
-            //}
-            //else if (actMobName == "genType2")
-            //{
-            //    Console.WriteLine("a Bat appears!");
-            //    int trueMobName = 2;
-            //    // ref out hp/ac/dmg rang of mob
-            //    return trueMobName;
-            //}
-            //else if (actMobName == "genType3")
-            //{
-            //    Console.WriteLine("a Bee appears!");
-            //    int trueMobName = 3;
-            //    // ref out hp/ac/dmg rang of mob
-            //    return trueMobName;
-            //}
-            //else if (actMobName == "genType4")
-            //{
-            //    Console.WriteLine("a Fariy appears!");
-            //    int trueMobName = 4;
-            //    // ref out hp/ac/dmg rang of mob
-            //    return trueMobName;
-            //}
-            //else
-            //{
-            //    return 0;
-            //}
-        //}
-
-
-
-        
     }
 }
