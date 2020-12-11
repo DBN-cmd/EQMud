@@ -30,19 +30,22 @@ namespace EQMud
             int mob1AC = 0;
             int mob1DmgMin= 0;
             int mob1DmgMax = 0;
+            int mob1Ini = 0;
             int mob2HP = 0;
             int mob2AC = 0;
             int mob2DmgMin = 0;
             int mob2DmgMax = 0;
+            int mob2Ini = 0;
             int mob3HP = 0;
             int mob3AC = 0;
             int mob3DmgMin = 0;
             int mob3DmgMax = 0;
+            int mob3Ini = 0;
             int mob4HP = 0;
             int mob4AC = 0;
             int mob4DmgMin = 0;
             int mob4DmgMax = 0;
-
+            int mob4Ini = 0;
 
 
 
@@ -94,9 +97,10 @@ namespace EQMud
                     MobStats(genCreature);
 
 
-                    CharMovement(genCreature, ref isCampingOut, ref xCoord, ref yCoord, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC,
-                                   ref mob2DmgMin, ref mob2DmgMax, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, 
-                                   ref mob4DmgMax, ref north, ref south, ref east, ref west, ref possibleMobs, ref prevMobs, ref currentArea);
+                    CharMovement(genCreature, ref isCampingOut, ref xCoord, ref yCoord, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob1Ini, ref mob2HP, 
+                                   ref mob2AC, ref mob2DmgMin, ref mob2DmgMax, ref mob2Ini, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob3Ini, ref mob4HP, 
+                                   ref mob4AC, ref mob4DmgMin, ref mob4DmgMax, ref mob4Ini, ref north, ref south, ref east, ref west, ref possibleMobs, 
+                                   ref prevMobs, ref currentArea);
 
 
 
@@ -107,9 +111,10 @@ namespace EQMud
                 {
                    
                     
-                    CharMovement(genCreature, ref isCampingOut, ref xCoord, ref yCoord, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC,
-                                   ref mob2DmgMin, ref mob2DmgMax, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, 
-                                   ref mob4DmgMax, ref north, ref south, ref east, ref west, ref possibleMobs, ref prevMobs, ref currentArea);
+                    CharMovement(genCreature, ref isCampingOut, ref xCoord, ref yCoord, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob1Ini, ref mob2HP,
+                                   ref mob2AC, ref mob2DmgMin, ref mob2DmgMax, ref mob2Ini, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob3Ini, ref mob4HP,
+                                   ref mob4AC, ref mob4DmgMin, ref mob4DmgMax, ref mob4Ini, ref north, ref south, ref east, ref west, ref possibleMobs,
+                                   ref prevMobs, ref currentArea);
                 }
                 
             }
@@ -117,9 +122,10 @@ namespace EQMud
         }
 
         static void CharMovement(List<string>genCreature, ref bool isCampingOut, ref int xCoord, ref int yCoord, ref int mob1HP, ref int mob1AC, 
-                                        ref int mob1DmgMin, ref int mob1DmgMax, ref int mob2HP, ref int mob2AC, ref int mob2DmgMin, ref int mob2DmgMax, ref int mob3HP, 
-                                        ref int mob3AC, ref int mob3DmgMin, ref int mob3DmgMax, ref int mob4HP, ref int mob4AC, ref int mob4DmgMin, ref int mob4DmgMax, 
-                                        ref bool north, ref bool south, ref bool east, ref bool west, ref bool possibleMobs, ref bool prevMobs, ref string currentArea)
+                                        ref int mob1DmgMin, ref int mob1DmgMax, ref int mob1Ini, ref int mob2HP, ref int mob2AC, ref int mob2DmgMin, ref int mob2DmgMax, 
+                                        ref int mob2Ini, ref int mob3HP, ref int mob3AC, ref int mob3DmgMin, ref int mob3DmgMax, ref int mob3Ini, ref int mob4HP, 
+                                        ref int mob4AC, ref int mob4DmgMin, ref int mob4DmgMax, ref int mob4Ini, ref bool north, ref bool south, ref bool east, 
+                                        ref bool west, ref bool possibleMobs, ref bool prevMobs, ref string currentArea)
         {
         DiscribeArea:
             Console.WriteLine("******************************************************************************");
@@ -128,10 +134,13 @@ namespace EQMud
 
             if (prevMobs)
             {
-                MobStatAssign(genCreature, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob2HP, ref mob2AC, ref mob2DmgMin, ref mob2DmgMax, 
-                          ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob4HP, ref mob4AC, ref mob4DmgMin, ref mob4DmgMax);
+                MobStatAssign(genCreature, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob1Ini, ref mob2HP, ref mob2AC,
+                                   ref mob2DmgMin, ref mob2DmgMax, ref mob2Ini, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob3Ini, ref mob4HP,
+                                   ref mob4AC, ref mob4DmgMin, ref mob4DmgMax, ref mob4Ini);
+
                 Console.WriteLine("There are mobs in the area! You must attack or run!");
                 Console.WriteLine("Current Commands Available: {Discribe}, {Attack}, {Run}");
+
                 string playerChoice = Console.ReadLine();
                 playerChoice = playerChoice.ToUpper();
                 switch (playerChoice)
@@ -144,21 +153,21 @@ namespace EQMud
                     case "DISCRIBE":
                         Console.WriteLine("\nThe following is in this area:");
                         int mobCount = genCreature.Count();
-                        if (mobCount > 1)
+                        if (mobCount > 0)
                         {
                             Console.WriteLine($"a {genCreature[0]}");
 
-                            if (mobCount > 5)
+                            if (mobCount > 6)
                             {
-                                Console.WriteLine($"a {genCreature[5]}");
+                                Console.WriteLine($"a {genCreature[6]}");
 
-                                if (mobCount > 10)
+                                if (mobCount > 12)
                                 {
-                                    Console.WriteLine($"a {genCreature[10]}");
+                                    Console.WriteLine($"a {genCreature[12]}");
 
-                                    if (mobCount > 15)
+                                    if (mobCount > 18)
                                     {
-                                        Console.WriteLine($"a {genCreature[15]}");
+                                        Console.WriteLine($"a {genCreature[18]}");
                                     }
                                 }
                             }
@@ -178,21 +187,25 @@ namespace EQMud
                         Console.WriteLine($"1AC = {mob1AC}");
                         Console.WriteLine($"1min = {mob1DmgMin}");
                         Console.WriteLine($"1max = {mob1DmgMax}");
+                        Console.WriteLine($"1ini = {mob1Ini}");
                         Console.WriteLine("MOB 2 STATS");
                         Console.WriteLine($"2hp = {mob2HP}");
                         Console.WriteLine($"2AC = {mob2AC}");
                         Console.WriteLine($"2min = {mob2DmgMin}");
                         Console.WriteLine($"2max = {mob2DmgMax}");
+                        Console.WriteLine($"2ini = {mob2Ini}");
                         Console.WriteLine("MOB 3 STATS");
                         Console.WriteLine($"3hp = {mob3HP}");
                         Console.WriteLine($"3AC = {mob3AC}");
                         Console.WriteLine($"3min = {mob3DmgMin}");
                         Console.WriteLine($"3max = {mob3DmgMax}");
+                        Console.WriteLine($"3ini = {mob3Ini}");
                         Console.WriteLine("MOB 4 STATS");
                         Console.WriteLine($"4hp = {mob4HP}");
                         Console.WriteLine($"4AC = {mob4AC}");
                         Console.WriteLine($"4min = {mob4DmgMin}");
                         Console.WriteLine($"4max = {mob4DmgMax}");
+                        Console.WriteLine($"4ini = {mob4Ini}");
 
                         goto DiscribeArea;
 
@@ -202,7 +215,9 @@ namespace EQMud
 
                     case "ATK":
                     case "ATTACK":
-
+                        Combat(genCreature, ref mob1HP, ref mob1AC, ref mob1DmgMin, ref mob1DmgMax, ref mob1Ini, ref mob2HP, ref mob2AC,
+                                   ref mob2DmgMin, ref mob2DmgMax, ref mob2Ini, ref mob3HP, ref mob3AC, ref mob3DmgMin, ref mob3DmgMax, ref mob3Ini, ref mob4HP, 
+                                   ref mob4AC, ref mob4DmgMin, ref mob4DmgMax, ref mob4Ini);
                         break;
 
                     case "R":
@@ -218,7 +233,7 @@ namespace EQMud
                             case "NORTH":
                                 if (!north)
                                 {
-                                    Console.WriteLine("You are unable to mobe in that direction!");
+                                    Console.WriteLine("You are unable to move in that direction!");
                                     goto DiscribeArea;
 
                                 }
@@ -234,7 +249,7 @@ namespace EQMud
                             case "SOUTH":
                                 if (!south)
                                 {
-                                    Console.WriteLine("You are unable to mobe in that direction!");
+                                    Console.WriteLine("You are unable to move in that direction!");
                                     goto DiscribeArea;
 
                                 }
@@ -250,7 +265,7 @@ namespace EQMud
                             case "EAST":
                                 if (!east)
                                 {
-                                    Console.WriteLine("You are unable to mobe in that direction!");
+                                    Console.WriteLine("You are unable to move in that direction!");
                                     goto DiscribeArea;
 
                                 }
@@ -266,7 +281,7 @@ namespace EQMud
                             case "WEST":
                                 if (!west)
                                 {
-                                    Console.WriteLine("You are unable to mobe in that direction!");
+                                    Console.WriteLine("You are unable to move in that direction!");
                                     goto DiscribeArea;
 
                                 }
@@ -305,7 +320,7 @@ namespace EQMud
                     case "NORTH":
                         if (!north)
                         {
-                            Console.WriteLine("You are unable to mobe in that direction!");
+                            Console.WriteLine("You are unable to move in that direction!");
                             break;
                         }
 
@@ -319,7 +334,7 @@ namespace EQMud
                     case "SOUTH":
                         if (!south)
                         {
-                            Console.WriteLine("You are unable to mobe in that direction!");
+                            Console.WriteLine("You are unable to move in that direction!");
                             break;
                         }
                         else
@@ -332,7 +347,7 @@ namespace EQMud
                     case "EAST":
                         if (!east)
                         {
-                            Console.WriteLine("You are unable to mobe in that direction!");
+                            Console.WriteLine("You are unable to move in that direction!");
                             break;
                         }
                         else
@@ -345,7 +360,7 @@ namespace EQMud
                     case "WEST":
                         if (!west)
                         {
-                            Console.WriteLine("You are unable to mobe in that direction!");
+                            Console.WriteLine("You are unable to move in that direction!");
                             break;
                         }
                         else
@@ -393,21 +408,25 @@ namespace EQMud
                         Console.WriteLine($"1AC = {mob1AC}");
                         Console.WriteLine($"1min = {mob1DmgMin}");
                         Console.WriteLine($"1max = {mob1DmgMax}");
+                        Console.WriteLine($"1ini = {mob1Ini}");
                         Console.WriteLine("MOB 2 STATS");
                         Console.WriteLine($"2hp = {mob2HP}");
                         Console.WriteLine($"2AC = {mob2AC}");
                         Console.WriteLine($"2min = {mob2DmgMin}");
                         Console.WriteLine($"2max = {mob2DmgMax}");
+                        Console.WriteLine($"2ini = {mob2Ini}");
                         Console.WriteLine("MOB 3 STATS");
                         Console.WriteLine($"3hp = {mob3HP}");
                         Console.WriteLine($"3AC = {mob3AC}");
                         Console.WriteLine($"3min = {mob3DmgMin}");
                         Console.WriteLine($"3max = {mob3DmgMax}");
+                        Console.WriteLine($"3ini = {mob3Ini}");
                         Console.WriteLine("MOB 4 STATS");
                         Console.WriteLine($"4hp = {mob4HP}");
                         Console.WriteLine($"4AC = {mob4AC}");
                         Console.WriteLine($"4min = {mob4DmgMin}");
                         Console.WriteLine($"4max = {mob4DmgMax}");
+                        Console.WriteLine($"4ini = {mob4Ini}");
 
                         goto DiscribeArea;
 
@@ -507,37 +526,41 @@ namespace EQMud
                 if (genCreature[indexCount] == "bandit")
                 {
                     indexCount += 1;
-                    genCreature.Insert(indexCount, "5");
-                    genCreature.Insert(indexCount, "2");
                     genCreature.Insert(indexCount, "8");
-                    genCreature.Insert(indexCount, "10");
+                    genCreature.Insert(indexCount, "5"); // mob maxdmg
+                    genCreature.Insert(indexCount, "2"); // mob mindmg
+                    genCreature.Insert(indexCount, "8"); // mob ac
+                    genCreature.Insert(indexCount, "10"); // mob hp
 
                 }
                 else if (genCreature[indexCount] == "bat")
                 {
                     indexCount += 1;
-                    genCreature.Insert(indexCount, "3");
-                    genCreature.Insert(indexCount, "1");
-                    genCreature.Insert(indexCount, "4");
-                    genCreature.Insert(indexCount, "6");
+                    genCreature.Insert(indexCount, "5");
+                    genCreature.Insert(indexCount, "3"); // mob maxdmg
+                    genCreature.Insert(indexCount, "1"); // mob mindmg
+                    genCreature.Insert(indexCount, "4"); // mob ac
+                    genCreature.Insert(indexCount, "6"); // mob hp
 
                 }
                 else if (genCreature[indexCount] == "bee")
                 {
                     indexCount += 1;
-                    genCreature.Insert(indexCount, "4");
-                    genCreature.Insert(indexCount, "1");
                     genCreature.Insert(indexCount, "5");
-                    genCreature.Insert(indexCount, "4");
+                    genCreature.Insert(indexCount, "4"); // mob maxdmg
+                    genCreature.Insert(indexCount, "1"); // mob mindmg
+                    genCreature.Insert(indexCount, "5"); // mob ac
+                    genCreature.Insert(indexCount, "4"); // mob hp
 
                 }
                 else if (genCreature[indexCount] == "fairy")
                 {
                     indexCount += 1;
-                    genCreature.Insert(indexCount, "6");
-                    genCreature.Insert(indexCount, "3");
                     genCreature.Insert(indexCount, "10");
-                    genCreature.Insert(indexCount, "10");
+                    genCreature.Insert(indexCount, "6"); // mob maxdmg
+                    genCreature.Insert(indexCount, "3"); // mob mindmg
+                    genCreature.Insert(indexCount, "10"); // mob ac
+                    genCreature.Insert(indexCount, "10"); // mob hp
 
                 }
                 else
@@ -551,9 +574,9 @@ namespace EQMud
         }
 
 
-        static void MobStatAssign(List<string> genCreature, ref int mob1HP, ref int mob1AC, ref int mob1DmgMin, ref int mob1DmgMax, ref int mob2HP, ref int mob2AC, 
-                                    ref int mob2DmgMin, ref int mob2DmgMax, ref int mob3HP, ref int mob3AC, ref int mob3DmgMin, ref int mob3DmgMax, ref int mob4HP, 
-                                    ref int mob4AC, ref int mob4DmgMin, ref int mob4DmgMax)
+        static void MobStatAssign(List<string> genCreature, ref int mob1HP, ref int mob1AC, ref int mob1DmgMin, ref int mob1DmgMax, ref int mob1Ini, ref int mob2HP, 
+                                    ref int mob2AC, ref int mob2DmgMin, ref int mob2DmgMax, ref int mob2Ini, ref int mob3HP, ref int mob3AC, ref int mob3DmgMin, 
+                                    ref int mob3DmgMax, ref int mob3Ini, ref int mob4HP, ref int mob4AC, ref int mob4DmgMin, ref int mob4DmgMax, ref int mob4Ini)
         {
             int mobCount = genCreature.Count();
 
@@ -569,30 +592,34 @@ namespace EQMud
                 mob1AC = Convert.ToInt32(genCreature[2]);
                 mob1DmgMin = Convert.ToInt32(genCreature[3]);
                 mob1DmgMax = Convert.ToInt32(genCreature[4]);
+                mob1Ini = Convert.ToInt32(genCreature[5]);
 
-                if (mobCount > 5)
+                if (mobCount > 6)
                 {
-                    Console.WriteLine($"a {genCreature[5]} appears!");
-                    mob2HP = Convert.ToInt32(genCreature[6]);
-                    mob2AC = Convert.ToInt32(genCreature[7]);
-                    mob2DmgMin = Convert.ToInt32(genCreature[8]);
-                    mob2DmgMax = Convert.ToInt32(genCreature[9]);
+                    Console.WriteLine($"a {genCreature[6]} appears!");
+                    mob2HP = Convert.ToInt32(genCreature[7]);
+                    mob2AC = Convert.ToInt32(genCreature[8]);
+                    mob2DmgMin = Convert.ToInt32(genCreature[9]);
+                    mob2DmgMax = Convert.ToInt32(genCreature[10]);
+                    mob2Ini = Convert.ToInt32(genCreature[11]);
 
-                    if (mobCount > 10)
+                    if (mobCount > 12)
                     {
-                        Console.WriteLine($"a {genCreature[10]} appears!");
-                        mob3HP = Convert.ToInt32(genCreature[11]);
-                        mob3AC = Convert.ToInt32(genCreature[12]);
-                        mob3DmgMin = Convert.ToInt32(genCreature[13]);
-                        mob3DmgMax = Convert.ToInt32(genCreature[14]);
+                        Console.WriteLine($"a {genCreature[12]} appears!");
+                        mob3HP = Convert.ToInt32(genCreature[13]);
+                        mob3AC = Convert.ToInt32(genCreature[14]);
+                        mob3DmgMin = Convert.ToInt32(genCreature[15]);
+                        mob3DmgMax = Convert.ToInt32(genCreature[16]);
+                        mob3Ini = Convert.ToInt32(genCreature[17]);
 
-                        if (mobCount > 15)
+                        if (mobCount > 18)
                         {
-                            Console.WriteLine($"a {genCreature[15]} appears!");
-                            mob4HP = Convert.ToInt32(genCreature[16]);
-                            mob4AC = Convert.ToInt32(genCreature[17]);
-                            mob4DmgMin = Convert.ToInt32(genCreature[18]);
-                            mob4DmgMax = Convert.ToInt32(genCreature[19]);
+                            Console.WriteLine($"a {genCreature[18]} appears!");
+                            mob4HP = Convert.ToInt32(genCreature[19]);
+                            mob4AC = Convert.ToInt32(genCreature[20]);
+                            mob4DmgMin = Convert.ToInt32(genCreature[21]);
+                            mob4DmgMax = Convert.ToInt32(genCreature[22]);
+                            mob4Ini = Convert.ToInt32(genCreature[23]);
 
                         }
                     }
@@ -601,9 +628,14 @@ namespace EQMud
             }
         }
             
+        static void Combat(List<string> genCreature, ref int mob1HP, ref int mob1AC, ref int mob1DmgMin, ref int mob1DmgMax, ref int mob1Ini, ref int mob2HP, ref int mob2AC,
+                                   ref int mob2DmgMin, ref int mob2DmgMax, ref int mob2Ini, ref int mob3HP, ref int mob3AC, ref int mob3DmgMin, ref int mob3DmgMax, 
+                                   ref int mob3Ini, ref int mob4HP, ref int mob4AC, ref int mob4DmgMin, ref int mob4DmgMax, ref int mob4Ini)
+        {
+
+        }
 
 
-        
 
 
 
